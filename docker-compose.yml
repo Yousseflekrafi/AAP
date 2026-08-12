@@ -8,7 +8,7 @@ services:
       # World Wide Web Publishing Service, Skype, VMware NAT, etc.), which
       # shows up as ERR_CONNECTION_RESET rather than a Docker startup
       # error, so publish on an uncommon port instead.
-      - "8090:80"
+      - "80:80"
     depends_on:
       - backend
       - frontend
@@ -64,7 +64,7 @@ services:
     volumes:
       - ./backend:/app
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
       db:
         condition: service_healthy
