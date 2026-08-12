@@ -2,7 +2,7 @@
 
 A SaaS platform that lets teams add an intelligent, natural-language administration layer to their applications instead of hand-building admin pages, filters and dashboards for every need.
 
-This repo covers Phase 1 (security-first backend and frontend foundations: auth, RBAC, audit, i18n, reusable UI) and the start of Phase 2 (Docker + Traefik) that later phases (Celery, CI/CD, then AI query engine, RAG, connectors, MCP) build on.
+This repo covers Phase 1 (security-first backend and frontend foundations: auth, RBAC, audit, i18n, reusable UI) and the start of Phase 2 (Docker + Nginx) that later phases (Celery, CI/CD, then AI query engine, RAG, connectors, MCP) build on.
 
 - [`backend/`](backend/README.md) — Django/DRF, PostgreSQL, Redis, JWT/OAuth, RBAC, audit logging.
 - [`frontend/`](frontend/README.md) — React, TypeScript, Vite, Tailwind, Redux Toolkit, i18n, ECharts.
@@ -16,17 +16,17 @@ cp .env.docker.example .env
 docker compose up --build
 ```
 
-This starts Traefik, PostgreSQL, Redis, the Django backend and the Vite dev server, all on one network:
+This starts PostgreSQL, Redis, the Django backend, the Vite dev server, and an nginx reverse proxy in front of both, all on one network:
 
-| Service            | URL                          |
-| ------------------ | ----------------------------- |
-| Frontend (via Traefik) | http://app.localhost |
-| Backend API (via Traefik) | http://api.localhost/api |
-| Traefik dashboard  | http://localhost:8081         |
-| Backend (direct)   | http://localhost:8000          |
-| Frontend (direct)  | http://localhost:5173          |
+| Service                  | URL                             |
+| ------------------------- | -------------------------------- |
+| App (via nginx)           | http://localhost:8090            |
+| API (via nginx)           | http://localhost:8090/api        |
+| Django admin (via nginx)  | http://localhost:8090/admin      |
+| Backend (direct)          | http://localhost:8000            |
+| Frontend (direct)         | http://localhost:5173            |
 
-`*.localhost` hostnames resolve to `127.0.0.1` on their own (RFC 6761) — no `/etc/hosts` edit needed.
+nginx (`nginx/nginx.conf`) is the single entry point: `/api/`, `/admin/` and `/static/` are proxied to the Django backend, everything else (including the Vite HMR websocket) goes to the frontend dev server. The frontend's `VITE_API_URL` always points at nginx, so API calls work the same whether you load the app through nginx or hit the frontend dev server directly.
 
 Both `backend/` and `frontend/` are bind-mounted into their containers, so code changes hot-reload (Django dev server autoreload, Vite HMR) without rebuilding. The backend entrypoint waits for Postgres and Redis to accept connections and runs `migrate` automatically on every start.
 

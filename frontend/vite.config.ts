@@ -11,8 +11,8 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     strictPort: true,
-    // Allow the Traefik-fronted hostname in addition to localhost when
-    // running via docker compose.
-    allowedHosts: ['localhost', 'app.localhost'],
+    // nginx forwards the original Host header it received from the
+    // browser, so allow the hostnames people might use to reach it.
+    allowedHosts: ['localhost'],
   },
 })
