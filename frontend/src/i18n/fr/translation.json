@@ -1,0 +1,48 @@
+{
+  "common": {
+    "appName": "AAP",
+    "tagline": "Plateforme d'administration intelligente",
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "submit": "Envoyer",
+    "search": "Rechercher",
+    "noData": "Aucune donnée disponible",
+    "somethingWentWrong": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "logout": "Déconnexion",
+    "email": "E-mail",
+    "password": "Mot de passe"
+  },
+  "nav": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "users": "Utilisateurs",
+    "notifications": "Notifications",
+    "audit": "Audit"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "register": "Créer un compte",
+    "loginWithGoogle": "Continuer avec Google",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "verifyEmailTitle": "Vérifiez votre e-mail",
+    "verifyEmailBody": "Entrez le code à 6 chiffres envoyé à votre adresse e-mail.",
+    "resendCode": "Renvoyer le code",
+    "resetPasswordTitle": "Réinitialiser le mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "invalidCredentials": "E-mail ou mot de passe invalide."
+  },
+  "admin": {
+    "dashboard": "Tableau de bord admin",
+    "userDetails": "Détails de l'utilisateur",
+    "auditLogs": "Journaux d'audit",
+    "securityEvents": "Événements de sécurité"
+  }
+}
