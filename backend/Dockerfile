@@ -14,11 +14,15 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-# Normalize line endings in case the file was checked out with CRLF
-# (e.g. on Windows) — a CRLF shebang breaks `exec` with "no such file".
-RUN sed -i 's/\r$//' entrypoint.sh && chmod +x entrypoint.sh
+RUN chmod +x entrypoint.sh
 
 EXPOSE 8000
 
-ENTRYPOINT ["./entrypoint.sh"]
+# docker-compose.yml bind-mounts ./backend over /app at runtime, which
+# shadows entrypoint.sh baked into the image with whatever is on the host
+# checkout — CRLF line endings (common on Windows) break the shebang, and
+# bind-mounted files from Docker Desktop can lose the executable bit. Fix
+# both at container start, right before running it, so it can't break
+# regardless of the host's line endings or permissions.
+ENTRYPOINT ["sh", "-c", "sed -i 's/\\r$//' entrypoint.sh && chmod +x entrypoint.sh && exec ./entrypoint.sh \"$@\"", "--"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
