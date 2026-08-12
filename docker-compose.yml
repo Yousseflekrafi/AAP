@@ -1,0 +1,108 @@
+services:
+  traefik:
+    image: traefik:v3.1
+    command:
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - "80:80"
+      - "8080:8080" # Traefik dashboard (dev only)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - aap
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-aap}
+      POSTGRES_USER: ${POSTGRES_USER:-aap}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aap}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - aap
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aap} -d ${POSTGRES_DB:-aap}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - aap
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-dev-insecure-secret-change-me}
+      DEBUG: "True"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,backend,api.localhost"
+      DATABASE_URL: postgres://${POSTGRES_USER:-aap}:${POSTGRES_PASSWORD:-aap}@db:5432/${POSTGRES_DB:-aap}
+      REDIS_URL: redis://redis:6379/0
+      CORS_ALLOWED_ORIGINS: "http://localhost:5173,http://app.localhost"
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:-5d1nde03f6yZvLoRJ4Aoo4xp18YBfAMS6lmY0Eb2OGU=}
+      GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
+      FRONTEND_URL: http://app.localhost
+      EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      DEFAULT_FROM_EMAIL: no-reply@aap.local
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aap
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.aap-api.rule=Host(`api.localhost`)
+      - traefik.http.routers.aap-api.entrypoints=web
+      - traefik.http.services.aap-api.loadbalancer.server.port=8000
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      VITE_API_URL: http://api.localhost/api
+      VITE_GOOGLE_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - aap
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.aap-app.rule=Host(`app.localhost`)
+      - traefik.http.routers.aap-app.entrypoints=web
+      - traefik.http.services.aap-app.loadbalancer.server.port=5173
+
+volumes:
+  postgres_data:
+  frontend_node_modules:
+
+networks:
+  aap:
+    driver: bridge
