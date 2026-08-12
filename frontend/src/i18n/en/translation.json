@@ -1,0 +1,48 @@
+{
+  "common": {
+    "appName": "AAP",
+    "tagline": "AI Administration Platform",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "search": "Search",
+    "noData": "No data available",
+    "somethingWentWrong": "Something went wrong",
+    "retry": "Retry",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "users": "Users",
+    "notifications": "Notifications",
+    "audit": "Audit"
+  },
+  "auth": {
+    "login": "Log in",
+    "register": "Create account",
+    "loginWithGoogle": "Continue with Google",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "verifyEmailTitle": "Verify your email",
+    "verifyEmailBody": "Enter the 6-digit code we sent to your email address.",
+    "resendCode": "Resend code",
+    "resetPasswordTitle": "Reset your password",
+    "newPassword": "New password",
+    "invalidCredentials": "Invalid email or password."
+  },
+  "admin": {
+    "dashboard": "Admin dashboard",
+    "userDetails": "User details",
+    "auditLogs": "Audit logs",
+    "securityEvents": "Security events"
+  }
+}
