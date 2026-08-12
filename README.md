@@ -20,11 +20,14 @@ This starts PostgreSQL, Redis, the Django backend, the Vite dev server, and an n
 
 | Service                  | URL                             |
 | ------------------------- | -------------------------------- |
-| App (via nginx)           | http://localhost:8090            |
-| API (via nginx)           | http://localhost:8090/api        |
-| Django admin (via nginx)  | http://localhost:8090/admin      |
-| Backend (direct)          | http://localhost:8000            |
+| App (via nginx)           | http://localhost                 |
+| Login page                | http://localhost/login           |
+| API (via nginx)           | http://localhost/api             |
+| Django admin (via nginx)  | http://localhost/admin           |
+| Backend (direct)          | http://localhost:8001            |
 | Frontend (direct)         | http://localhost:5173            |
+
+If port 80 is already taken on your machine (common on Windows — IIS, Skype, VMware NAT), remap `nginx`'s port in `docker-compose.yml` (e.g. `"8090:80"`) and update `VITE_API_URL`, `CORS_ALLOWED_ORIGINS` and `FRONTEND_URL` in the `backend`/`frontend` services to match — all three must point at whatever port nginx is published on.
 
 nginx (`nginx/nginx.conf`) is the single entry point: `/api/`, `/admin/` and `/static/` are proxied to the Django backend, everything else (including the Vite HMR websocket) goes to the frontend dev server. The frontend's `VITE_API_URL` always points at nginx, so API calls work the same whether you load the app through nginx or hit the frontend dev server directly.
 
