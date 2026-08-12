@@ -22,7 +22,7 @@ This starts Traefik, PostgreSQL, Redis, the Django backend and the Vite dev serv
 | ------------------ | ----------------------------- |
 | Frontend (via Traefik) | http://app.localhost |
 | Backend API (via Traefik) | http://api.localhost/api |
-| Traefik dashboard  | http://localhost:8080         |
+| Traefik dashboard  | http://localhost:8081         |
 | Backend (direct)   | http://localhost:8000          |
 | Frontend (direct)  | http://localhost:5173          |
 
