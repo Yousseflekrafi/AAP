@@ -30,7 +30,7 @@ cd backend
 python3 -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env           # edit if you want Postgres instead of SQLite
+copy .env.example .env           # edit if you want Postgres instead of SQLite
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
