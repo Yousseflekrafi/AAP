@@ -1,6 +1,14 @@
 import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
-import { authLoading, clearUser, selectAuthStatus, selectCurrentUser, selectIsAdmin, setUser } from "../store/slices/authSlice";
+import {
+  authLoading,
+  clearUser,
+  selectAuthStatus,
+  selectCurrentUser,
+  selectIsAdmin,
+  selectIsSuperAdmin,
+  setUser,
+} from "../store/slices/authSlice";
 import * as authService from "../services/authService";
 import type { LoginPayload } from "../types/auth";
 
@@ -9,6 +17,7 @@ export function useAuth() {
   const user = useAppSelector(selectCurrentUser);
   const status = useAppSelector(selectAuthStatus);
   const isAdmin = useAppSelector(selectIsAdmin);
+  const isSuperAdmin = useAppSelector(selectIsSuperAdmin);
 
   useEffect(() => {
     if (status !== "idle") return;
@@ -33,5 +42,5 @@ export function useAuth() {
     dispatch(clearUser());
   }, [dispatch]);
 
-  return { user, status, isAdmin, isAuthenticated: status === "authenticated", login, logout };
+  return { user, status, isAdmin, isSuperAdmin, isAuthenticated: status === "authenticated", login, logout };
 }

@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Icon } from "../Icon";
 import { LanguageSwitcher } from "../LanguageSwitcher";
 import { ThemeSwitcher } from "../ThemeSwitcher";
+import { NotificationBell } from "../NotificationBell";
 import { useAppDispatch } from "../../store";
 import { toggleSidebar } from "../../store/slices/sidebarSlice";
 import { useAuth } from "../../hooks/useAuth";
@@ -27,6 +28,7 @@ export function Navbar() {
       <div className="flex items-center gap-2">
         <LanguageSwitcher />
         <ThemeSwitcher />
+        {user && <NotificationBell />}
         {user && (
           <div className="ml-2 flex items-center gap-2">
             <span className="hidden text-sm text-gray-700 dark:text-gray-300 sm:inline">{user.full_name}</span>

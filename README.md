@@ -2,7 +2,9 @@
 
 A SaaS platform that lets teams add an intelligent, natural-language administration layer to their applications instead of hand-building admin pages, filters and dashboards for every need.
 
-This repo is Phase 1 Core: the security-first backend/frontend foundations (auth, RBAC, audit, i18n, reusable UI) plus organizations, applications, customer PostgreSQL connections, and read-only schema discovery. Later phases (AI query engine, RAG, connectors, MCP) build on this.
+This repo is Phase 1 Core: the security-first backend/frontend foundations (auth, RBAC, audit, i18n, reusable UI) plus organizations, applications, customer PostgreSQL connections, read-only schema discovery, an in-app notification center, and an internal Admin↔Super Admin messaging module. Later phases (AI query engine, RAG, connectors, MCP) build on this.
+
+Account activation is verify-email-only — there's no admin approval queue to wait on. Organizations are the same: self-serve and immediately usable the moment you create one; a `super_admin` can suspend one after the fact (see `backend/README.md`), but there's no pre-use approval gate either.
 
 ## Stack
 

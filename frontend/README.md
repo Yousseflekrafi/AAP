@@ -22,9 +22,10 @@ The dev server proxies nothing by default — it talks to `VITE_API_URL` (defaul
 src/
   reusedComponents/   # Sidebar, Navbar, Modal, DataTable, Charts, Loader, etc.
   layouts/            # PublicLayout, UserLayout, AdminLayout
-  pages/               # public/, user/, admin/
+  pages/               # public/, user/, admin/, shared/ (e.g. Notifications)
   routes/              # AppRoutes, ProtectedRoute, AdminRoute
-  services/            # apiClient (axios + refresh interceptor), authService, adminService
+  services/            # apiClient (axios + refresh interceptor), authService, adminService,
+                       # notificationsService, adminMessagesService, dashboardService
   store/               # Redux Toolkit: auth, theme, language, sidebar slices
   i18n/                # fr/ en/ translation.json
   hooks/               # useAuth

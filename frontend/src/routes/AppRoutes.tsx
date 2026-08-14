@@ -16,10 +16,12 @@ import Dashboard from "../pages/user/Dashboard";
 import Profile from "../pages/user/Profile";
 import Settings from "../pages/user/Settings";
 
+import Notifications from "../pages/shared/Notifications";
+
 import AdminDashboard from "../pages/admin/Dashboard";
 import AdminUsers from "../pages/admin/Users";
 import AdminUserDetails from "../pages/admin/UserDetails";
-import AdminNotifications from "../pages/admin/Notifications";
+import AdminMessages from "../pages/admin/Messages";
 import AdminAudit from "../pages/admin/Audit";
 
 export function AppRoutes() {
@@ -37,6 +39,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route element={<UserLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
@@ -46,7 +49,8 @@ export function AppRoutes() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
             <Route path="/admin/users/:id" element={<AdminUserDetails />} />
-            <Route path="/admin/notifications" element={<AdminNotifications />} />
+            <Route path="/admin/messages" element={<AdminMessages />} />
+            <Route path="/admin/notifications" element={<Notifications />} />
             <Route path="/admin/audit" element={<AdminAudit />} />
           </Route>
         </Route>

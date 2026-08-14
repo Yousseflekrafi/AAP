@@ -11,3 +11,4 @@ export * from "./DataTable";
 export * from "./Charts";
 export * from "./LanguageSwitcher";
 export * from "./ThemeSwitcher";
+export * from "./NotificationBell";

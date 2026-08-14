@@ -44,6 +44,8 @@ backend/
     connections/    # DatabaseConnection (Fernet-encrypted creds, read-only), test-connection
     schemas/        # DatabaseSchema/Table/Column/Relationship + read-only introspection service
     permissions/    # TablePermission/ColumnPermission/DataPermission — structural, enforcement is a later phase
+    notifications/  # in-app notification center (personal — no cross-user listing)
+    admin_messages/ # internal Admin <-> Super Admin conversations, not a customer-facing chat
     audit/          # audit logs + security events, request logging middleware
     ai/ knowledge/ queries/ billing/   # placeholders for later phases
 ```
@@ -56,8 +58,11 @@ Access tokens are returned in the response body and kept in memory on the fronte
 
 ## Organizations / Applications API
 
+Organizations are self-serve — no approval queue. Any verified user creates one and is immediately its `owner`; there's no `PENDING_APPROVAL` state to wait out (email verification is the only account gate, by design). A `super_admin` can moderate one after the fact:
+
 - `organizations/` — list (scoped to your memberships, or all for admins) / create (creator becomes `owner`).
 - `organizations/<id>/` — retrieve/update/delete; any member can read, only `owner`/`admin` members can write.
+- `organizations/<id>/suspend/` (super_admin, POST, body `{"reason": "..."}`) / `organizations/<id>/reactivate/` (super_admin, POST) — a suspended org is locked out for everyone except `super_admin` (even a plain platform `admin` who's also a member loses access), and every member gets notified.
 - `organizations/<id>/members/`, `organizations/<id>/members/<member_id>/` — manage membership.
 - `organizations/<org_id>/applications/` — list/create applications in an org.
 - `applications/<id>/` — retrieve/update/delete.
@@ -69,6 +74,22 @@ Access tokens are returned in the response body and kept in memory on the fronte
 - `connections/<id>/test/` — attempts a short, read-only connect + `SELECT 1`. Stores only success/failure, never customer data.
 - `connections/<id>/discover-schema/` — introspects `information_schema` (tables/columns/primary keys/foreign keys) read-only and syncs AAP's own schema metadata. Idempotent.
 - `connections/<id>/schema/` — returns the last-discovered schema (no live query).
+
+## Notifications API (`/api/notifications/`)
+
+Always scoped to the requester — there's no cross-user or admin-wide listing, notifications are personal.
+
+`notifications/`, `notifications/unread-count/`, `notifications/read-all/` (POST), `notifications/<id>/read/` (POST).
+
+## Admin messaging API (`/api/admin-messages/`)
+
+Internal support channel between org admins and platform `super_admin`s — not a customer-facing chat. `super_admin` sees every conversation; a plain `admin` sees only the ones they started.
+
+- `conversations/` — list/create. Creating one notifies every `super_admin`.
+- `conversations/<id>/` — retrieve.
+- `conversations/<id>/close/` (POST, body `{"status": "closed"|"open"}`) — either party can close/reopen their own conversation.
+- `conversations/<id>/manage/` (PATCH, `super_admin` only) — priority/assignment.
+- `conversations/<id>/messages/` — list/reply. Replying flips the conversation to `waiting_for_admin`/`waiting_for_super_admin` and notifies the other side.
 
 ## Audit API (`/api/audit/`)
 

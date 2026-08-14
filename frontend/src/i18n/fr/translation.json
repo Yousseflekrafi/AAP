@@ -21,6 +21,7 @@
     "settings": "Paramètres",
     "users": "Utilisateurs",
     "notifications": "Notifications",
+    "messages": "Messages",
     "audit": "Audit"
   },
   "auth": {

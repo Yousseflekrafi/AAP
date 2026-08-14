@@ -35,4 +35,7 @@ export default authSlice.reducer;
 export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user;
 export const selectAuthStatus = (state: { auth: AuthState }) => state.auth.status;
 export const selectIsAdmin = (state: { auth: AuthState }) =>
-  !!state.auth.user && (state.auth.user.is_superuser || state.auth.user.roles.includes("admin"));
+  !!state.auth.user &&
+  (state.auth.user.is_superuser || state.auth.user.roles.includes("admin") || state.auth.user.roles.includes("super_admin"));
+export const selectIsSuperAdmin = (state: { auth: AuthState }) =>
+  !!state.auth.user && (state.auth.user.is_superuser || state.auth.user.roles.includes("super_admin"));

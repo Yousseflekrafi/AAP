@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import dashboard_views, views
 
 app_name = "accounts"
 
@@ -20,4 +20,6 @@ urlpatterns = [
     path("users/<uuid:id>/", views.UserDetailView.as_view(), name="user-detail"),
     path("users/<uuid:id>/status/", views.UserStatusUpdateView.as_view(), name="user-status"),
     path("users/<uuid:id>/roles/", views.UserRoleUpdateView.as_view(), name="user-roles"),
+    path("dashboard/platform-stats/", dashboard_views.PlatformStatsView.as_view(), name="platform-stats"),
+    path("dashboard/org-stats/", dashboard_views.OrgStatsView.as_view(), name="org-stats"),
 ]

@@ -14,6 +14,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.audit.models import SecurityEvent
 from apps.audit.services import log_security_event
+from apps.notifications.models import Notification
+from apps.notifications.services import notify
 
 from . import bruteforce, otp
 from .cookies import clear_refresh_cookie, set_refresh_cookie
@@ -342,6 +344,12 @@ class UserStatusUpdateView(APIView):
             severity=SecurityEvent.Severity.WARNING,
             metadata={"target_user": str(target.id), "is_active": target.is_active},
         )
+        notify(
+            target,
+            Notification.NotifType.ACCOUNT,
+            "Your account was reactivated" if target.is_active else "Your account was deactivated",
+            body="Contact an administrator if you believe this is a mistake." if not target.is_active else "",
+        )
         return Response(UserSerializer(target).data)
 
 
@@ -378,5 +386,11 @@ class UserRoleUpdateView(APIView):
             event_type="user_roles_changed",
             severity=SecurityEvent.Severity.WARNING,
             metadata={"target_user": str(target.id), "roles": sorted(requested_roles)},
+        )
+        notify(
+            target,
+            Notification.NotifType.ACCOUNT,
+            "Your roles were updated",
+            body=f"Your roles are now: {', '.join(sorted(requested_roles)) or 'none'}.",
         )
         return Response(UserSerializer(target).data)

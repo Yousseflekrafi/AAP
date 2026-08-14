@@ -5,9 +5,23 @@ from django.db import models
 
 
 class Organization(models.Model):
+    class Status(models.TextChoices):
+        ACTIVE = "active", "Active"
+        SUSPENDED = "suspended", "Suspended"
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=160, unique=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE)
+    suspended_reason = models.CharField(max_length=500, blank=True)
+    suspended_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="organizations_suspended",
+    )
+    suspended_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
@@ -22,6 +36,10 @@ class Organization(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def is_active(self):
+        return self.status == self.Status.ACTIVE
 
 
 class OrganizationMember(models.Model):
