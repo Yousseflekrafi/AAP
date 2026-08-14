@@ -15,6 +15,10 @@ import ResetPassword from "../pages/public/ResetPassword";
 import Dashboard from "../pages/user/Dashboard";
 import Profile from "../pages/user/Profile";
 import Settings from "../pages/user/Settings";
+import Projects from "../pages/user/Projects";
+import ProjectDetail from "../pages/user/ProjectDetail";
+import OrganizationPage from "../pages/user/Organization";
+import Members from "../pages/user/Members";
 
 import Notifications from "../pages/shared/Notifications";
 
@@ -39,6 +43,10 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route element={<UserLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path="/organization" element={<OrganizationPage />} />
+          <Route path="/members" element={<Members />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />

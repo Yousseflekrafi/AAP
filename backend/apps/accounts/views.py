@@ -16,6 +16,7 @@ from apps.audit.models import SecurityEvent
 from apps.audit.services import log_security_event
 from apps.notifications.models import Notification
 from apps.notifications.services import notify
+from apps.organizations.services import ensure_default_workspace
 
 from . import bruteforce, otp
 from .cookies import clear_refresh_cookie, set_refresh_cookie
@@ -85,6 +86,7 @@ class VerifyEmailView(APIView):
 
         user.is_email_verified = True
         user.save(update_fields=["is_email_verified"])
+        ensure_default_workspace(user)
         return _issue_tokens_response(user)
 
 
@@ -277,6 +279,7 @@ class GoogleLoginView(APIView):
         if not user.is_active:
             return Response({"detail": "Account is disabled."}, status=status.HTTP_403_FORBIDDEN)
 
+        ensure_default_workspace(user)
         log_security_event(request, event_type="google_login", user=user)
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         return _issue_tokens_response(user, status_code=status_code)

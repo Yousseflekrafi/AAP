@@ -9,9 +9,17 @@ class Organization(models.Model):
         ACTIVE = "active", "Active"
         SUSPENDED = "suspended", "Suspended"
 
+    class OrgType(models.TextChoices):
+        PERSONAL = "personal", "Personal"
+        COMPANY = "company", "Company"
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=160, unique=True)
+    org_type = models.CharField(max_length=10, choices=OrgType.choices, default=OrgType.PERSONAL)
+    website = models.URLField(blank=True)
+    country = models.CharField(max_length=100, blank=True)
+    industry = models.CharField(max_length=100, blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE)
     suspended_reason = models.CharField(max_length=500, blank=True)
     suspended_by = models.ForeignKey(
@@ -40,6 +48,15 @@ class Organization(models.Model):
     @property
     def is_active(self):
         return self.status == self.Status.ACTIVE
+
+    @property
+    def is_profile_complete(self):
+        """Blueprint section 3: company accounts see a non-blocking warning
+        if the org profile is incomplete. Personal workspaces are always
+        considered complete — there's nothing more to fill in."""
+        if self.org_type != self.OrgType.COMPANY:
+            return True
+        return bool(self.website and self.country and self.industry)
 
 
 class OrganizationMember(models.Model):

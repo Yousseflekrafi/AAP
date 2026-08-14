@@ -59,10 +59,15 @@ class Role(models.Model):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    class AccountType(models.TextChoices):
+        PERSONAL = "personal", "Personal"
+        COMPANY = "company", "Company"
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True, db_index=True)
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
+    account_type = models.CharField(max_length=10, choices=AccountType.choices, default=AccountType.PERSONAL)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

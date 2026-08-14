@@ -1,0 +1,32 @@
+import { apiClient } from "./apiClient";
+import type { Paginated } from "./adminService";
+import type { Organization, OrganizationMember, OrgRole } from "../types/organization";
+
+export async function fetchMyOrganizations(): Promise<Paginated<Organization>> {
+  const { data } = await apiClient.get<Paginated<Organization>>("/organizations/");
+  return data;
+}
+
+export async function fetchOrganization(id: string): Promise<Organization> {
+  const { data } = await apiClient.get<Organization>(`/organizations/${id}/`);
+  return data;
+}
+
+export async function updateOrganization(id: string, payload: Partial<Organization>): Promise<Organization> {
+  const { data } = await apiClient.patch<Organization>(`/organizations/${id}/`, payload);
+  return data;
+}
+
+export async function fetchMembers(orgId: string): Promise<Paginated<OrganizationMember>> {
+  const { data } = await apiClient.get<Paginated<OrganizationMember>>(`/organizations/${orgId}/members/`);
+  return data;
+}
+
+export async function inviteMember(orgId: string, email: string, role: OrgRole = "member"): Promise<OrganizationMember> {
+  const { data } = await apiClient.post<OrganizationMember>(`/organizations/${orgId}/members/`, { email, role });
+  return data;
+}
+
+export async function removeMember(orgId: string, memberId: string): Promise<void> {
+  await apiClient.delete(`/organizations/${orgId}/members/${memberId}/`);
+}

@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.models import Role
+from apps.accounts.models import Role, User
 from apps.accounts.permissions import IsSuperAdmin
 from apps.audit.models import SecurityEvent
 from apps.audit.services import log_security_event
@@ -18,7 +18,12 @@ from apps.notifications.services import notify, notify_many
 
 from .models import Organization, OrganizationMember
 from .permissions import IsOrgMember
-from .serializers import OrganizationMemberSerializer, OrganizationSerializer, SuspendOrganizationSerializer
+from .serializers import (
+    InviteMemberSerializer,
+    OrganizationMemberSerializer,
+    OrganizationSerializer,
+    SuspendOrganizationSerializer,
+)
 
 
 class OrganizationListCreateView(ListCreateAPIView):
@@ -53,11 +58,12 @@ class OrganizationDetailView(RetrieveUpdateDestroyAPIView):
 
 
 class OrganizationMemberListCreateView(ListCreateAPIView):
-    """Nested under an organization: list/add members. Adding a member
-    requires owner/admin on the organization (enforced via IsOrgMember on
-    the parent lookup)."""
+    """Nested under an organization: list members, invite by email. Adding
+    a member requires owner/admin on the organization (enforced via
+    IsOrgMember on the parent lookup). MVP invite: the invitee must already
+    have a verified AAP account — a real pending-invitation flow for
+    non-users is a later phase."""
 
-    serializer_class = OrganizationMemberSerializer
     permission_classes = [IsAuthenticated]
 
     def get_organization(self):
@@ -69,18 +75,38 @@ class OrganizationMemberListCreateView(ListCreateAPIView):
         organization = self.get_organization()
         return OrganizationMember.objects.filter(organization=organization).select_related("user")
 
+    def get_serializer_class(self):
+        return InviteMemberSerializer if self.request.method == "POST" else OrganizationMemberSerializer
+
     def get_permissions(self):
         return [IsAuthenticated(), IsOrgMember()]
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
         organization = self.get_organization()
-        member = serializer.save(organization=organization)
+        serializer = InviteMemberSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data["email"].lower().strip()
+        role = serializer.validated_data["role"]
+
+        try:
+            invitee = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "No AAP account exists for that email yet — they need to sign up first."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        if OrganizationMember.objects.filter(organization=organization, user=invitee).exists():
+            return Response({"detail": "Already a member of this organization."}, status=status.HTTP_400_BAD_REQUEST)
+
+        member = OrganizationMember.objects.create(organization=organization, user=invitee, role=role)
         notify(
-            member.user,
+            invitee,
             Notification.NotifType.ORGANIZATION,
             f"You were added to {organization.name}",
             body=f"Role: {member.role}",
         )
+        return Response(OrganizationMemberSerializer(member).data, status=status.HTTP_201_CREATED)
 
 
 class OrganizationMemberDetailView(APIView):

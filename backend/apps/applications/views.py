@@ -1,4 +1,7 @@
+import uuid
+
 from django.shortcuts import get_object_or_404
+from django.utils.text import slugify
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
@@ -11,7 +14,8 @@ from .serializers import ApplicationSerializer
 
 
 class ApplicationListCreateView(ListCreateAPIView):
-    """Nested under an organization: list/create its applications."""
+    """Nested under an organization: list/create its applications (aka
+    "Projects" in the product UI)."""
 
     serializer_class = ApplicationSerializer
 
@@ -27,7 +31,12 @@ class ApplicationListCreateView(ListCreateAPIView):
         return Application.objects.filter(organization=self.get_organization())
 
     def perform_create(self, serializer):
-        serializer.save(organization=self.get_organization(), created_by=self.request.user)
+        organization = self.get_organization()
+        base_slug = slugify(serializer.validated_data.get("slug") or serializer.validated_data["name"]) or "project"
+        slug = base_slug
+        while Application.objects.filter(organization=organization, slug=slug).exists():
+            slug = f"{base_slug}-{uuid.uuid4().hex[:6]}"
+        serializer.save(organization=organization, slug=slug, created_by=self.request.user)
 
 
 class ApplicationDetailView(RetrieveUpdateDestroyAPIView):

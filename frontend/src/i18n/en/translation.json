@@ -22,7 +22,48 @@
     "users": "Users",
     "notifications": "Notifications",
     "messages": "Messages",
-    "audit": "Audit"
+    "audit": "Audit",
+    "projects": "Projects",
+    "organization": "Organization",
+    "members": "Members"
+  },
+  "project": {
+    "overview": "Overview",
+    "database": "Database",
+    "settings": "Settings",
+    "newProject": "New project",
+    "name": "Project name",
+    "description": "Description",
+    "applicationUrl": "Application URL",
+    "environment": "Environment",
+    "contextDescription": "Describe what the administration should manage",
+    "contextDescriptionHelp": "Plain language — this becomes context for schema analysis and AI setup.",
+    "development": "Development",
+    "staging": "Staging",
+    "production": "Production",
+    "noProjects": "No projects yet",
+    "noProjectsBody": "Create your first project to connect a database and build an admin interface.",
+    "connection": "Database connection",
+    "noConnection": "No database connected yet",
+    "testConnection": "Test connection",
+    "discoverSchema": "Discover schema",
+    "connectionOk": "Connection succeeded",
+    "connectionFailed": "Connection failed",
+    "tables": "Tables",
+    "relationships": "Relationships"
+  },
+  "organization": {
+    "profile": "Organization profile",
+    "incompleteWarning": "Your organization profile is incomplete — add a website, country and industry so your workspace is ready for the team.",
+    "website": "Website",
+    "country": "Country",
+    "industry": "Industry",
+    "inviteMember": "Invite member",
+    "role": "Role",
+    "owner": "Owner",
+    "admin": "Admin",
+    "member": "Member",
+    "remove": "Remove"
   },
   "auth": {
     "login": "Log in",
@@ -38,7 +79,10 @@
     "resendCode": "Resend code",
     "resetPasswordTitle": "Reset your password",
     "newPassword": "New password",
-    "invalidCredentials": "Invalid email or password."
+    "invalidCredentials": "Invalid email or password.",
+    "accountType": "Account type",
+    "personal": "Personal",
+    "company": "Company"
   },
   "admin": {
     "dashboard": "Admin dashboard",

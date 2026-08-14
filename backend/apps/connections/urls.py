@@ -6,7 +6,7 @@ app_name = "connections"
 
 urlpatterns = [
     path(
-        "applications/<uuid:application_id>/connections/",
+        "projects/<uuid:application_id>/connections/",
         views.DatabaseConnectionListCreateView.as_view(),
         name="connection-list",
     ),

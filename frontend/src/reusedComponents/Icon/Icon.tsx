@@ -15,6 +15,10 @@ const PATHS: Record<string, string> = {
   sun: "M12 4V2M12 22v-2M4.93 4.93 3.51 3.51M20.49 20.49l-1.42-1.42M4 12H2M22 12h-2M4.93 19.07l-1.42 1.42M20.49 3.51l-1.42 1.42M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z",
   moon: "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z",
   close: "M18 6 6 18M6 6l12 12",
+  folder: "M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
+  building: "M6 22V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v18M9 22V2h6v20M4 22h16M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1",
+  database: "M21 5c0 1.66-4 3-9 3S3 6.66 3 5s4-3 9-3 9 1.34 9 3ZM21 5v6c0 1.66-4 3-9 3s-9-1.34-9-3V5M21 11v6c0 1.66-4 3-9 3s-9-1.34-9-3v-6",
+  plus: "M12 5v14M5 12h14",
 };
 
 export type IconName = keyof typeof PATHS;

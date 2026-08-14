@@ -22,7 +22,48 @@
     "users": "Utilisateurs",
     "notifications": "Notifications",
     "messages": "Messages",
-    "audit": "Audit"
+    "audit": "Audit",
+    "projects": "Projets",
+    "organization": "Organisation",
+    "members": "Membres"
+  },
+  "project": {
+    "overview": "Aperçu",
+    "database": "Base de données",
+    "settings": "Paramètres",
+    "newProject": "Nouveau projet",
+    "name": "Nom du projet",
+    "description": "Description",
+    "applicationUrl": "URL de l'application",
+    "environment": "Environnement",
+    "contextDescription": "Décrivez ce que l'administration doit gérer",
+    "contextDescriptionHelp": "En langage naturel — sert de contexte pour l'analyse du schéma et la configuration de l'IA.",
+    "development": "Développement",
+    "staging": "Pré-production",
+    "production": "Production",
+    "noProjects": "Aucun projet pour le moment",
+    "noProjectsBody": "Créez votre premier projet pour connecter une base de données et construire une interface d'administration.",
+    "connection": "Connexion à la base de données",
+    "noConnection": "Aucune base de données connectée",
+    "testConnection": "Tester la connexion",
+    "discoverSchema": "Découvrir le schéma",
+    "connectionOk": "Connexion réussie",
+    "connectionFailed": "Échec de la connexion",
+    "tables": "Tables",
+    "relationships": "Relations"
+  },
+  "organization": {
+    "profile": "Profil de l'organisation",
+    "incompleteWarning": "Le profil de votre organisation est incomplet — ajoutez un site web, un pays et un secteur d'activité pour préparer votre espace de travail.",
+    "website": "Site web",
+    "country": "Pays",
+    "industry": "Secteur d'activité",
+    "inviteMember": "Inviter un membre",
+    "role": "Rôle",
+    "owner": "Propriétaire",
+    "admin": "Admin",
+    "member": "Membre",
+    "remove": "Retirer"
   },
   "auth": {
     "login": "Se connecter",
@@ -38,7 +79,10 @@
     "resendCode": "Renvoyer le code",
     "resetPasswordTitle": "Réinitialiser le mot de passe",
     "newPassword": "Nouveau mot de passe",
-    "invalidCredentials": "E-mail ou mot de passe invalide."
+    "invalidCredentials": "E-mail ou mot de passe invalide.",
+    "accountType": "Type de compte",
+    "personal": "Personnel",
+    "company": "Entreprise"
   },
   "admin": {
     "dashboard": "Tableau de bord admin",

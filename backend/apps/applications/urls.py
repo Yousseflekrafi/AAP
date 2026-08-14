@@ -6,9 +6,9 @@ app_name = "applications"
 
 urlpatterns = [
     path(
-        "organizations/<uuid:organization_id>/applications/",
+        "organizations/<uuid:organization_id>/projects/",
         views.ApplicationListCreateView.as_view(),
-        name="application-list",
+        name="project-list",
     ),
-    path("applications/<uuid:id>/", views.ApplicationDetailView.as_view(), name="application-detail"),
+    path("projects/<uuid:id>/", views.ApplicationDetailView.as_view(), name="project-detail"),
 ]

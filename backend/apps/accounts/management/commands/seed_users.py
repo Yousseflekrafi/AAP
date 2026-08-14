@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from apps.accounts.models import Role, User
+from apps.organizations.services import ensure_default_workspace
 
 SEED_USERS = [
     {
@@ -51,6 +52,7 @@ class Command(BaseCommand):
             user.is_active = True
             user.save()
             user.roles.set([role_objs[name] for name in spec["roles"]])
+            ensure_default_workspace(user)
 
             verb = "Created" if created else "Updated"
             role_label = ", ".join(spec["roles"]) or "none (customer)"
