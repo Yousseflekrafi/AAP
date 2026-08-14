@@ -6,6 +6,7 @@ import * as authService from "../../services/authService";
 import { useAppDispatch } from "../../store";
 import { setUser } from "../../store/slices/authSlice";
 import { Loader } from "../../reusedComponents/Loader";
+import { postLoginPath } from "../../utils/roles";
 
 export default function VerifyEmail() {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ export default function VerifyEmail() {
     try {
       const { user } = await authService.verifyEmail(email, code);
       dispatch(setUser(user));
-      navigate("/dashboard");
+      navigate(postLoginPath(user));
     } catch {
       setError(t("common.somethingWentWrong"));
     } finally {

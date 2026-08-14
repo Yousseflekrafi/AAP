@@ -5,6 +5,7 @@ import { isAxiosError } from "axios";
 import { AuthCard } from "./AuthCard";
 import { useAuth } from "../../hooks/useAuth";
 import { Loader } from "../../reusedComponents/Loader";
+import { postLoginPath } from "../../utils/roles";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -21,8 +22,8 @@ export default function Login() {
     setError(null);
     setSubmitting(true);
     try {
-      await login({ email, password });
-      navigate("/dashboard");
+      const loggedInUser = await login({ email, password });
+      navigate(postLoginPath(loggedInUser));
     } catch (err) {
       if (isAxiosError(err) && err.response?.status === 403) {
         navigate("/verify-email", { state: { email } });
