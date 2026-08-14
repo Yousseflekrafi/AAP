@@ -22,8 +22,15 @@ export async function fetchMembers(orgId: string): Promise<Paginated<Organizatio
   return data;
 }
 
-export async function inviteMember(orgId: string, email: string, role: OrgRole = "member"): Promise<OrganizationMember> {
-  const { data } = await apiClient.post<OrganizationMember>(`/organizations/${orgId}/members/`, { email, role });
+export interface InviteMemberPayload {
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  role?: OrgRole;
+}
+
+export async function inviteMember(orgId: string, payload: InviteMemberPayload): Promise<OrganizationMember> {
+  const { data } = await apiClient.post<OrganizationMember>(`/organizations/${orgId}/members/`, payload);
   return data;
 }
 

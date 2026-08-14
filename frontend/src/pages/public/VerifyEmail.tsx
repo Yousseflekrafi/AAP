@@ -69,7 +69,7 @@ export default function VerifyEmail() {
         <button
           type="submit"
           disabled={submitting}
-          className="flex items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+          className="flex items-center justify-center gap-2 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
         >
           {submitting && <Loader size="sm" className="text-white" />}
           {t("common.submit")}
@@ -78,7 +78,7 @@ export default function VerifyEmail() {
       <button
         type="button"
         onClick={() => void handleResend()}
-        className="mt-4 w-full text-center text-sm text-blue-600 hover:underline"
+        className="mt-4 w-full text-center text-sm text-brand-600 hover:underline"
       >
         {t("auth.resendCode")}
       </button>

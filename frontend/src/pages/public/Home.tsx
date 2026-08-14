@@ -8,7 +8,7 @@ export default function Home() {
       <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">{t("common.appName")}</h1>
       <p className="max-w-md text-gray-500 dark:text-gray-400">{t("common.tagline")}</p>
       <div className="flex gap-3">
-        <Link to="/login" className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+        <Link to="/login" className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">
           {t("auth.login")}
         </Link>
         <Link

@@ -57,7 +57,7 @@ function OrganizationForm({ organizationId }: { organizationId: string }) {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="flex items-center gap-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-        <Icon name="building" className="text-blue-600" />
+        <Icon name="building" className="text-brand-600" />
         {t("organization.profile")}
       </h1>
 
@@ -103,7 +103,7 @@ function OrganizationForm({ organizationId }: { organizationId: string }) {
         <button
           type="submit"
           disabled={saveMutation.isPending}
-          className="flex items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+          className="flex items-center justify-center gap-2 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
         >
           {saveMutation.isPending && <Loader size="sm" className="text-white" />}
           {t("common.save")}

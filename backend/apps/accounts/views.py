@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token as google_id_token
 from rest_framework import status
@@ -316,7 +317,7 @@ class UserListView(ListAPIView):
     permission_classes = [IsAdmin]
     serializer_class = UserSerializer
     queryset = User.objects.all().prefetch_related("roles")
-    filterset_fields = ["is_active", "is_email_verified", "auth_provider"]
+    filterset_fields = ["is_active", "is_deleted", "is_email_verified", "auth_provider"]
     search_fields = ["email", "first_name", "last_name"]
 
 
@@ -354,6 +355,33 @@ class UserStatusUpdateView(APIView):
             body="Contact an administrator if you believe this is a mistake." if not target.is_active else "",
         )
         return Response(UserSerializer(target).data)
+
+
+class UserDeleteView(APIView):
+    """Admin-only: soft-deletes an account (kept for audit trail, excluded
+    from normal listings/login). Deleting a super_admin requires
+    super_admin, matching the role-grant safeguard below."""
+
+    permission_classes = [IsAdmin]
+
+    def delete(self, request, id):
+        target = get_object_or_404(User, id=id)
+        if target.has_role(Role.SUPER_ADMIN) and not request.user.has_role(Role.SUPER_ADMIN):
+            return Response(
+                {"detail": "Only a super_admin can delete a super_admin account."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        target.is_deleted = True
+        target.is_active = False
+        target.deleted_at = timezone.now()
+        target.save(update_fields=["is_deleted", "is_active", "deleted_at"])
+        log_security_event(
+            request,
+            event_type="user_deleted",
+            severity=SecurityEvent.Severity.WARNING,
+            metadata={"target_user": str(target.id)},
+        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserRoleUpdateView(APIView):

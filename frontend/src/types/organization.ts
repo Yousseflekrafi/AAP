@@ -27,6 +27,8 @@ export interface OrganizationMember {
   user: string;
   user_email: string;
   user_name: string;
+  user_status: "active" | "deactivated" | "deleted";
+  is_online: boolean;
   role: OrgRole;
   joined_at: string;
 }

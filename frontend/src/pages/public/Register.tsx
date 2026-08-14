@@ -90,7 +90,7 @@ export default function Register() {
                 onClick={() => setAccountType(type)}
                 className={`flex-1 rounded-md border px-3 py-2 text-sm font-medium ${
                   accountType === type
-                    ? "border-blue-600 bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                    ? "border-brand-600 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300"
                     : "border-gray-300 text-gray-600 dark:border-gray-700 dark:text-gray-300"
                 }`}
               >
@@ -103,14 +103,14 @@ export default function Register() {
         <button
           type="submit"
           disabled={submitting}
-          className="flex items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+          className="flex items-center justify-center gap-2 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
         >
           {submitting && <Loader size="sm" className="text-white" />}
           {t("auth.register")}
         </button>
       </form>
       <div className="mt-4 text-center text-sm">
-        <Link to="/login" className="text-blue-600 hover:underline">
+        <Link to="/login" className="text-brand-600 hover:underline">
           {t("auth.haveAccount")}
         </Link>
       </div>

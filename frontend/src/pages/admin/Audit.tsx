@@ -61,7 +61,7 @@ export default function Audit() {
             }}
             className={`px-3 py-2 text-sm font-medium ${
               tab === value
-                ? "border-b-2 border-blue-600 text-blue-600"
+                ? "border-b-2 border-brand-600 text-brand-600"
                 : "text-gray-500 dark:text-gray-400"
             }`}
           >

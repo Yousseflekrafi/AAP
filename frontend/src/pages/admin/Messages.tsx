@@ -56,7 +56,7 @@ function ConversationThread({ conversation, onClose }: { conversation: AdminConv
             await closeConversation(conversation.id, isClosed ? "open" : "closed");
             refresh();
           }}
-          className="text-blue-600 hover:underline"
+          className="text-brand-600 hover:underline"
         >
           {isClosed ? "Reopen" : "Close"}
         </button>
@@ -81,7 +81,7 @@ function ConversationThread({ conversation, onClose }: { conversation: AdminConv
           placeholder="Write a reply..."
           className="flex-1 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
         />
-        <button type="submit" className="rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700">
+        <button type="submit" className="rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700">
           Send
         </button>
       </form>
@@ -129,7 +129,7 @@ export default function Messages() {
         <button
           type="button"
           onClick={() => setShowNew(true)}
-          className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
         >
           New conversation
         </button>
@@ -157,7 +157,7 @@ export default function Messages() {
             placeholder="Subject"
             className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
           />
-          <button type="submit" className="rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700">
+          <button type="submit" className="rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700">
             {t("common.submit")}
           </button>
         </form>

@@ -53,7 +53,7 @@ export default function ProjectDetail() {
           ← {t("nav.projects")}
         </button>
         <h1 className="flex items-center gap-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-          <Icon name="folder" className="text-blue-600" />
+          <Icon name="folder" className="text-brand-600" />
           {project.name}
         </h1>
       </div>
@@ -66,7 +66,7 @@ export default function ProjectDetail() {
             onClick={() => setTab(tb.key)}
             className={`-mb-px border-b-2 px-3 py-2 text-sm font-medium ${
               tab === tb.key
-                ? "border-blue-600 text-blue-600"
+                ? "border-brand-600 text-brand-600"
                 : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
             }`}
           >
@@ -169,7 +169,7 @@ function DatabaseTab({ project }: { project: Project }) {
           <button
             type="button"
             onClick={() => setFormOpen(true)}
-            className="w-fit rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="w-fit rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700"
           >
             {t("project.connection")}
           </button>
@@ -229,7 +229,7 @@ function DatabaseTab({ project }: { project: Project }) {
             <button
               type="submit"
               disabled={createMutation.isPending}
-              className="flex items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+              className="flex items-center justify-center gap-2 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
             >
               {createMutation.isPending && <Loader size="sm" className="text-white" />}
               {t("common.submit")}
@@ -243,7 +243,7 @@ function DatabaseTab({ project }: { project: Project }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-4">
-        <Icon name="database" className="text-blue-600" />
+        <Icon name="database" className="text-brand-600" />
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{connection.name}</p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -262,7 +262,7 @@ function DatabaseTab({ project }: { project: Project }) {
           type="button"
           onClick={() => discoverMutation.mutate()}
           disabled={discoverMutation.isPending}
-          className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
         >
           {t("project.discoverSchema")}
         </button>
@@ -386,7 +386,7 @@ function SettingsTab({ project, onDeleted }: { project: Project; onDeleted: () =
       <button
         type="submit"
         disabled={saveMutation.isPending}
-        className="flex items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+        className="flex items-center justify-center gap-2 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
       >
         {saveMutation.isPending && <Loader size="sm" className="text-white" />}
         {t("common.save")}

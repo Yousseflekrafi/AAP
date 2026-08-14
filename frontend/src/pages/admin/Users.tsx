@@ -6,6 +6,7 @@ import { fetchUsers } from "../../services/adminService";
 import { DataTable, type DataTableColumn } from "../../reusedComponents/DataTable";
 import { Pagination } from "../../reusedComponents/Pagination";
 import { ErrorState } from "../../reusedComponents/ErrorState";
+import { StatusBadge, OnlineDot } from "../../reusedComponents/StatusBadge";
 import type { User } from "../../types/auth";
 
 const PAGE_SIZE = 20;
@@ -22,18 +23,28 @@ export default function Users() {
   });
 
   const columns: DataTableColumn<User>[] = [
-    { key: "email", header: t("common.email") },
-    { key: "full_name", header: "Name" },
     {
-      key: "is_email_verified",
-      header: "Verified",
-      render: (row) => (row.is_email_verified ? "Yes" : "No"),
+      key: "email",
+      header: t("common.email"),
+      render: (row) => (
+        <div>
+          <p className="font-medium text-gray-900 dark:text-gray-100">{row.full_name}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{row.email}</p>
+        </div>
+      ),
     },
     {
       key: "roles",
       header: "Roles",
       render: (row) => row.roles.join(", ") || "—",
     },
+    {
+      key: "is_email_verified",
+      header: "Verified",
+      render: (row) => (row.is_email_verified ? "Yes" : "No"),
+    },
+    { key: "status", header: t("organization.status"), render: (row) => <StatusBadge status={row.status} /> },
+    { key: "is_online", header: t("organization.presence"), render: (row) => <OnlineDot online={row.is_online} /> },
   ];
 
   return (

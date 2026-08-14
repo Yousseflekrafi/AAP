@@ -59,6 +59,11 @@
     "country": "Country",
     "industry": "Industry",
     "inviteMember": "Invite member",
+    "addMember": "Add member",
+    "addMemberHelp": "If they don't have an AAP account yet, one is created for them and they'll get an email to set their password.",
+    "teamSubtitle": "See who's on your team, their role, and whether their account is active.",
+    "status": "Account status",
+    "presence": "Presence",
     "role": "Role",
     "owner": "Owner",
     "admin": "Admin",
@@ -88,6 +93,16 @@
     "dashboard": "Admin dashboard",
     "userDetails": "User details",
     "auditLogs": "Audit logs",
-    "securityEvents": "Security events"
+    "securityEvents": "Security events",
+    "console": "Console",
+    "myWorkspace": "My workspace",
+    "consolePanel": "Admin console"
+  },
+  "status": {
+    "active": "Active",
+    "deactivated": "Deactivated",
+    "deleted": "Deleted",
+    "online": "Online",
+    "offline": "Offline"
   }
 }

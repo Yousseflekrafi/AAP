@@ -1,8 +1,12 @@
 import uuid
+from datetime import timedelta
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from django.utils import timezone
+
+ONLINE_WINDOW = timedelta(minutes=5)
 
 
 class UserManager(BaseUserManager):
@@ -72,6 +76,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    last_seen_at = models.DateTimeField(null=True, blank=True)
 
     auth_provider = models.CharField(
         max_length=20,
@@ -115,3 +122,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_admin(self):
         return self.has_role(Role.ADMIN)
+
+    @property
+    def status(self):
+        if self.is_deleted:
+            return "deleted"
+        if not self.is_active:
+            return "deactivated"
+        return "active"
+
+    @property
+    def is_online(self):
+        return bool(self.last_seen_at and timezone.now() - self.last_seen_at < ONLINE_WINDOW)

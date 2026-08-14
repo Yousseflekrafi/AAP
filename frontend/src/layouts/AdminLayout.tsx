@@ -10,5 +10,5 @@ const ADMIN_LINKS: SidebarLink[] = [
 ];
 
 export function AdminLayout() {
-  return <DashboardLayout links={ADMIN_LINKS} />;
+  return <DashboardLayout links={ADMIN_LINKS} variant="admin" />;
 }

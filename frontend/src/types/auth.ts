@@ -1,4 +1,5 @@
 export type AccountType = "personal" | "company";
+export type AccountStatus = "active" | "deactivated" | "deleted";
 
 export interface User {
   id: string;
@@ -8,6 +9,10 @@ export interface User {
   full_name: string;
   account_type: AccountType;
   is_active: boolean;
+  is_deleted: boolean;
+  status: AccountStatus;
+  is_online: boolean;
+  last_seen_at: string | null;
   is_email_verified: boolean;
   is_staff: boolean;
   is_superuser: boolean;

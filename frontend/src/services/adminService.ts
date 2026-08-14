@@ -43,6 +43,15 @@ export async function fetchUserDetail(id: string): Promise<User> {
   return data;
 }
 
+export async function setUserActive(id: string, is_active: boolean): Promise<User> {
+  const { data } = await apiClient.patch<User>(`/auth/users/${id}/status/`, { is_active });
+  return data;
+}
+
+export async function deleteUser(id: string): Promise<void> {
+  await apiClient.delete(`/auth/users/${id}/delete/`);
+}
+
 export async function fetchAuditLogs(page = 1): Promise<Paginated<AuditLog>> {
   const { data } = await apiClient.get<Paginated<AuditLog>>("/audit/logs/", { params: { page } });
   return data;

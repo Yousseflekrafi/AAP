@@ -59,6 +59,11 @@
     "country": "Pays",
     "industry": "Secteur d'activité",
     "inviteMember": "Inviter un membre",
+    "addMember": "Ajouter un membre",
+    "addMemberHelp": "S'il n'a pas encore de compte AAP, un compte est créé pour lui et il recevra un e-mail pour définir son mot de passe.",
+    "teamSubtitle": "Consultez votre équipe, son rôle et l'état de chaque compte.",
+    "status": "État du compte",
+    "presence": "Présence",
     "role": "Rôle",
     "owner": "Propriétaire",
     "admin": "Admin",
@@ -88,6 +93,16 @@
     "dashboard": "Tableau de bord admin",
     "userDetails": "Détails de l'utilisateur",
     "auditLogs": "Journaux d'audit",
-    "securityEvents": "Événements de sécurité"
+    "securityEvents": "Événements de sécurité",
+    "console": "Console",
+    "myWorkspace": "Mon espace",
+    "consolePanel": "Console admin"
+  },
+  "status": {
+    "active": "Actif",
+    "deactivated": "Désactivé",
+    "deleted": "Supprimé",
+    "online": "En ligne",
+    "offline": "Hors ligne"
   }
 }

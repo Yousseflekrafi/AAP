@@ -10,7 +10,7 @@ export function Loader({ size = "md", className = "" }: LoaderProps) {
     <div
       role="status"
       aria-label="Loading"
-      className={`inline-block animate-spin rounded-full border-2 border-current border-t-transparent text-blue-600 ${SIZE_MAP[size]} ${className}`}
+      className={`inline-block animate-spin rounded-full border-2 border-current border-t-transparent text-brand-600 ${SIZE_MAP[size]} ${className}`}
     />
   );
 }

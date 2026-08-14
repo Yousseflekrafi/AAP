@@ -58,17 +58,17 @@ export default function Login() {
         <button
           type="submit"
           disabled={submitting}
-          className="flex items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+          className="flex items-center justify-center gap-2 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
         >
           {submitting && <Loader size="sm" className="text-white" />}
           {t("auth.login")}
         </button>
       </form>
       <div className="mt-4 flex justify-between text-sm">
-        <Link to="/forgot-password" className="text-blue-600 hover:underline">
+        <Link to="/forgot-password" className="text-brand-600 hover:underline">
           {t("auth.forgotPassword")}
         </Link>
-        <Link to="/register" className="text-blue-600 hover:underline">
+        <Link to="/register" className="text-brand-600 hover:underline">
           {t("auth.noAccount")}
         </Link>
       </div>

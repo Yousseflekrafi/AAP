@@ -1,19 +1,39 @@
 import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
-import { fetchUserDetail } from "../../services/adminService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchUserDetail, setUserActive, deleteUser } from "../../services/adminService";
 import { Breadcrumb } from "../../reusedComponents/Breadcrumb";
 import { Loader } from "../../reusedComponents/Loader";
 import { ErrorState } from "../../reusedComponents/ErrorState";
+import { StatusBadge, OnlineDot } from "../../reusedComponents/StatusBadge";
+import { Icon } from "../../reusedComponents/Icon";
 
 export default function UserDetails() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data: user, isLoading, isError, refetch } = useQuery({
     queryKey: ["admin-user", id],
     queryFn: () => fetchUserDetail(id as string),
     enabled: !!id,
+  });
+
+  const toggleActiveMutation = useMutation({
+    mutationFn: () => setUserActive(id as string, user!.status === "deactivated"),
+    onSuccess: (updated) => {
+      queryClient.setQueryData(["admin-user", id], updated);
+      void queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteUser(id as string),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      navigate("/admin/users");
+    },
   });
 
   return (
@@ -39,9 +59,38 @@ export default function UserDetails() {
             <dd className="text-gray-900 dark:text-gray-100">{user.auth_provider}</dd>
             <dt className="text-gray-500 dark:text-gray-400">Roles</dt>
             <dd className="text-gray-900 dark:text-gray-100">{user.roles.join(", ") || "—"}</dd>
+            <dt className="text-gray-500 dark:text-gray-400">{t("organization.status")}</dt>
+            <dd><StatusBadge status={user.status} /></dd>
+            <dt className="text-gray-500 dark:text-gray-400">{t("organization.presence")}</dt>
+            <dd><OnlineDot online={user.is_online} /></dd>
             <dt className="text-gray-500 dark:text-gray-400">Joined</dt>
             <dd className="text-gray-900 dark:text-gray-100">{new Date(user.created_at).toLocaleDateString()}</dd>
           </dl>
+
+          {user.status !== "deleted" && (
+            <div className="mt-6 flex gap-3 border-t border-gray-200 dark:border-gray-800 pt-4">
+              <button
+                type="button"
+                onClick={() => toggleActiveMutation.mutate()}
+                disabled={toggleActiveMutation.isPending}
+                className="flex items-center gap-1.5 rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-60"
+              >
+                <Icon name="power" size={14} />
+                {user.status === "deactivated" ? t("status.active") : t("status.deactivated")}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.confirm(`Delete ${user.email}? This cannot be undone.`)) deleteMutation.mutate();
+                }}
+                disabled={deleteMutation.isPending}
+                className="flex items-center gap-1.5 rounded-md border border-red-300 dark:border-red-900 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 disabled:opacity-60"
+              >
+                <Icon name="trash" size={14} />
+                {t("status.deleted")}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

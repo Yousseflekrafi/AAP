@@ -58,7 +58,7 @@ export default function Notifications() {
               await markNotificationRead(n.id);
               invalidate();
             }}
-            className="text-xs text-blue-600 hover:underline"
+            className="text-xs text-brand-600 hover:underline"
           >
             Mark read
           </button>
@@ -76,7 +76,7 @@ export default function Notifications() {
             await markAllNotificationsRead();
             invalidate();
           }}
-          className="text-sm text-blue-600 hover:underline"
+          className="text-sm text-brand-600 hover:underline"
         >
           Mark all read
         </button>

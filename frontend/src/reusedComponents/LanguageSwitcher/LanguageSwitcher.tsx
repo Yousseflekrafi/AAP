@@ -26,7 +26,7 @@ export function LanguageSwitcher() {
           onClick={() => handleChange(code)}
           className={`rounded px-2 py-1 ${
             language === code
-              ? "bg-blue-600 text-white"
+              ? "bg-brand-600 text-white"
               : "text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
           }`}
         >

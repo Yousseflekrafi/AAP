@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from rest_framework import status
 from rest_framework.generics import (
     ListCreateAPIView,
@@ -9,6 +10,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.accounts import otp
+from apps.accounts.mailer import send_invite_email
 from apps.accounts.models import Role, User
 from apps.accounts.permissions import IsSuperAdmin
 from apps.audit.models import SecurityEvent
@@ -60,9 +63,9 @@ class OrganizationDetailView(RetrieveUpdateDestroyAPIView):
 class OrganizationMemberListCreateView(ListCreateAPIView):
     """Nested under an organization: list members, invite by email. Adding
     a member requires owner/admin on the organization (enforced via
-    IsOrgMember on the parent lookup). MVP invite: the invitee must already
-    have a verified AAP account — a real pending-invitation flow for
-    non-users is a later phase."""
+    IsOrgMember on the parent lookup). If the invitee has no AAP account
+    yet, one is created for them (same shape as self-registration) and an
+    invite email lets them set a password."""
 
     permission_classes = [IsAuthenticated]
 
@@ -87,25 +90,37 @@ class OrganizationMemberListCreateView(ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data["email"].lower().strip()
         role = serializer.validated_data["role"]
+        first_name = serializer.validated_data["first_name"]
+        last_name = serializer.validated_data["last_name"]
 
-        try:
-            invitee = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response(
-                {"detail": "No AAP account exists for that email yet — they need to sign up first."},
-                status=status.HTTP_404_NOT_FOUND,
+        invitee = User.objects.filter(email=email).first()
+        created_account = False
+        if invitee is None:
+            invitee = User.objects.create_user(
+                email=email,
+                password=get_random_string(32),
+                first_name=first_name,
+                last_name=last_name,
+                account_type=User.AccountType.PERSONAL,
+                is_email_verified=True,
             )
+            created_account = True
 
         if OrganizationMember.objects.filter(organization=organization, user=invitee).exists():
             return Response({"detail": "Already a member of this organization."}, status=status.HTTP_400_BAD_REQUEST)
 
         member = OrganizationMember.objects.create(organization=organization, user=invitee, role=role)
-        notify(
-            invitee,
-            Notification.NotifType.ORGANIZATION,
-            f"You were added to {organization.name}",
-            body=f"Role: {member.role}",
-        )
+
+        if created_account:
+            token = otp.issue_password_reset_token(invitee.id)
+            send_invite_email(invitee, token, organization.name)
+        else:
+            notify(
+                invitee,
+                Notification.NotifType.ORGANIZATION,
+                f"You were added to {organization.name}",
+                body=f"Role: {member.role}",
+            )
         return Response(OrganizationMemberSerializer(member).data, status=status.HTTP_201_CREATED)
 
 

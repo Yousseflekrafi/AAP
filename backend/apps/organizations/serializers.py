@@ -6,18 +6,29 @@ from .models import Organization, OrganizationMember
 class OrganizationMemberSerializer(serializers.ModelSerializer):
     user_email = serializers.EmailField(source="user.email", read_only=True)
     user_name = serializers.CharField(source="user.full_name", read_only=True)
+    user_status = serializers.CharField(source="user.status", read_only=True)
+    is_online = serializers.BooleanField(source="user.is_online", read_only=True)
 
     class Meta:
         model = OrganizationMember
-        fields = ["id", "organization", "user", "user_email", "user_name", "role", "joined_at"]
-        read_only_fields = ["id", "organization", "user", "user_email", "user_name", "joined_at"]
+        fields = [
+            "id", "organization", "user", "user_email", "user_name", "user_status", "is_online",
+            "role", "joined_at",
+        ]
+        read_only_fields = [
+            "id", "organization", "user", "user_email", "user_name", "user_status", "is_online", "joined_at",
+        ]
 
 
 class InviteMemberSerializer(serializers.Serializer):
-    """MVP invite: adds an existing, verified AAP user by email. A real
-    pending-invitation flow (email sent to non-users) is a later phase."""
+    """Invite a teammate by email. If no AAP account exists for that email
+    yet, one is created on the spot (same registration data shape the
+    owner used: first/last name, personal account) and an invite email is
+    sent so they can set their password."""
 
     email = serializers.EmailField()
+    first_name = serializers.CharField(max_length=150, required=False, allow_blank=True, default="")
+    last_name = serializers.CharField(max_length=150, required=False, allow_blank=True, default="")
     role = serializers.ChoiceField(choices=OrganizationMember.OrgRole.choices, default=OrganizationMember.OrgRole.MEMBER)
 
 

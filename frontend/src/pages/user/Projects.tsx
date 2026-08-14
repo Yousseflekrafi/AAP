@@ -66,7 +66,7 @@ export default function Projects() {
         <button
           type="button"
           onClick={() => setModalOpen(true)}
-          className="flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="flex items-center gap-1.5 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700"
         >
           <Icon name="plus" size={16} />
           {t("project.newProject")}
@@ -81,7 +81,7 @@ export default function Projects() {
             <button
               type="button"
               onClick={() => setModalOpen(true)}
-              className="mt-2 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+              className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
             >
               {t("project.newProject")}
             </button>
@@ -93,10 +93,10 @@ export default function Projects() {
             <button
               key={project.id}
               onClick={() => navigate(`/projects/${project.id}`)}
-              className="flex flex-col gap-2 rounded-lg border border-gray-200 dark:border-gray-800 p-4 text-left hover:border-blue-400 dark:hover:border-blue-600"
+              className="flex flex-col gap-2 rounded-lg border border-gray-200 dark:border-gray-800 p-4 text-left hover:border-brand-400 dark:hover:border-brand-600"
             >
               <div className="flex items-center gap-2">
-                <Icon name="folder" size={18} className="text-blue-600" />
+                <Icon name="folder" size={18} className="text-brand-600" />
                 <span className="font-medium text-gray-900 dark:text-gray-100">{project.name}</span>
               </div>
               {project.description && (
@@ -163,7 +163,7 @@ export default function Projects() {
           <button
             type="submit"
             disabled={createMutation.isPending}
-            className="flex items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+            className="flex items-center justify-center gap-2 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
           >
             {createMutation.isPending && <Loader size="sm" className="text-white" />}
             {t("common.submit")}
