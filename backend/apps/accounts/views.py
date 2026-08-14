@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token as google_id_token
 from rest_framework import status
@@ -17,9 +18,11 @@ from apps.audit.services import log_security_event
 from . import bruteforce, otp
 from .cookies import clear_refresh_cookie, set_refresh_cookie
 from .mailer import send_password_reset_email, send_verification_email
-from .models import User
+from .models import Role, User
 from .permissions import IsAdmin
 from .serializers import (
+    AdminUserRoleSerializer,
+    AdminUserStatusSerializer,
     ChangePasswordSerializer,
     ForgotPasswordSerializer,
     GoogleLoginSerializer,
@@ -319,3 +322,61 @@ class UserDetailView(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all().prefetch_related("roles")
     lookup_field = "id"
+
+
+class UserStatusUpdateView(APIView):
+    """US-09: admin activates/deactivates a user account."""
+
+    permission_classes = [IsAdmin]
+
+    def patch(self, request, id):
+        serializer = AdminUserStatusSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        target = get_object_or_404(User, id=id)
+
+        target.is_active = serializer.validated_data["is_active"]
+        target.save(update_fields=["is_active"])
+        log_security_event(
+            request,
+            event_type="user_status_changed",
+            severity=SecurityEvent.Severity.WARNING,
+            metadata={"target_user": str(target.id), "is_active": target.is_active},
+        )
+        return Response(UserSerializer(target).data)
+
+
+class UserRoleUpdateView(APIView):
+    """US-10: admin changes a user's roles. Granting/revoking super_admin
+    itself requires super_admin — an admin cannot promote themselves or
+    anyone else to super_admin."""
+
+    permission_classes = [IsAdmin]
+
+    def patch(self, request, id):
+        serializer = AdminUserRoleSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        target = get_object_or_404(User, id=id)
+        requested_roles = set(serializer.validated_data["roles"])
+
+        current_roles = set(target.roles.values_list("name", flat=True))
+        touches_super_admin = Role.SUPER_ADMIN in requested_roles or Role.SUPER_ADMIN in current_roles
+        if touches_super_admin and not request.user.has_role(Role.SUPER_ADMIN):
+            return Response(
+                {"detail": "Only a super_admin can grant or revoke the super_admin role."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        roles = list(Role.objects.filter(name__in=requested_roles))
+        found_names = {r.name for r in roles}
+        missing = requested_roles - found_names
+        if missing:
+            return Response({"detail": f"Unknown role(s): {', '.join(sorted(missing))}"}, status=status.HTTP_400_BAD_REQUEST)
+
+        target.roles.set(roles)
+        log_security_event(
+            request,
+            event_type="user_roles_changed",
+            severity=SecurityEvent.Severity.WARNING,
+            metadata={"target_user": str(target.id), "roles": sorted(requested_roles)},
+        )
+        return Response(UserSerializer(target).data)

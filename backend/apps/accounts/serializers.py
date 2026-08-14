@@ -70,10 +70,23 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id", "email", "first_name", "last_name", "full_name",
-            "is_email_verified", "is_staff", "is_superuser", "auth_provider",
+            "is_active", "is_email_verified", "is_staff", "is_superuser", "auth_provider",
             "roles", "created_at",
         ]
         read_only_fields = fields
+
+
+class AdminUserStatusSerializer(serializers.Serializer):
+    """US-09: admin activates/deactivates an account."""
+
+    is_active = serializers.BooleanField()
+
+
+class AdminUserRoleSerializer(serializers.Serializer):
+    """US-10: admin changes a user's roles. Only super_admin may grant or
+    revoke the super_admin role itself."""
+
+    roles = serializers.ListField(child=serializers.SlugField(), allow_empty=True)
 
 
 class ChangePasswordSerializer(serializers.Serializer):

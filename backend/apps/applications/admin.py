@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Application
+
+
+@admin.register(Application)
+class ApplicationAdmin(admin.ModelAdmin):
+    list_display = ("name", "organization", "slug", "created_at")
+    search_fields = ("name", "slug", "organization__name")
+    list_filter = ("organization",)

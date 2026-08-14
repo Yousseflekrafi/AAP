@@ -18,4 +18,6 @@ urlpatterns = [
     path("me/", views.MeView.as_view(), name="me"),
     path("users/", views.UserListView.as_view(), name="user-list"),
     path("users/<uuid:id>/", views.UserDetailView.as_view(), name="user-detail"),
+    path("users/<uuid:id>/status/", views.UserStatusUpdateView.as_view(), name="user-status"),
+    path("users/<uuid:id>/roles/", views.UserRoleUpdateView.as_view(), name="user-roles"),
 ]

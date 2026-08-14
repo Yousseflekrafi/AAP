@@ -34,8 +34,19 @@ class UserManager(BaseUserManager):
 
 
 class Role(models.Model):
-    """Coarse RBAC role, e.g. 'admin' or 'user'. Fine-grained data
-    permissions (table/column level) live in apps.permissions, not here."""
+    """Coarse RBAC role: 'super_admin', 'admin', or a custom one. Fine-
+    grained data permissions (table/column level) live in apps.permissions,
+    not here."""
+
+    SUPER_ADMIN = "super_admin"
+    ADMIN = "admin"
+
+    # super_admin implies every capability admin has (platform-level admin
+    # accounts/orgs/security on top of day-to-day user administration).
+    IMPLIES = {
+        SUPER_ADMIN: {SUPER_ADMIN, ADMIN},
+        ADMIN: {ADMIN},
+    }
 
     name = models.SlugField(max_length=50, unique=True)
     description = models.CharField(max_length=255, blank=True)
@@ -84,4 +95,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.first_name} {self.last_name}".strip() or self.email
 
     def has_role(self, role_name):
-        return self.is_superuser or self.roles.filter(name=role_name).exists()
+        if self.is_superuser:
+            return True
+        held = set(self.roles.values_list("name", flat=True))
+        for held_role in held:
+            if role_name in Role.IMPLIES.get(held_role, {held_role}):
+                return True
+        return False
+
+    @property
+    def is_super_admin(self):
+        return self.has_role(Role.SUPER_ADMIN)
+
+    @property
+    def is_admin(self):
+        return self.has_role(Role.ADMIN)

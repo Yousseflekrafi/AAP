@@ -1,3 +1,22 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Organization, OrganizationMember
+
+
+class OrganizationMemberInline(admin.TabularInline):
+    model = OrganizationMember
+    extra = 0
+
+
+@admin.register(Organization)
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "created_by", "created_at")
+    search_fields = ("name", "slug")
+    inlines = [OrganizationMemberInline]
+
+
+@admin.register(OrganizationMember)
+class OrganizationMemberAdmin(admin.ModelAdmin):
+    list_display = ("organization", "user", "role", "joined_at")
+    list_filter = ("role",)
+    search_fields = ("organization__name", "user__email")

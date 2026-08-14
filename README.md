@@ -2,7 +2,7 @@
 
 A SaaS platform that lets teams add an intelligent, natural-language administration layer to their applications instead of hand-building admin pages, filters and dashboards for every need.
 
-This repo is Phase 1: the security-first backend and frontend foundations (auth, RBAC, audit, i18n, reusable UI) that later phases (AI query engine, RAG, connectors, MCP) build on.
+This repo is Phase 1 Core: the security-first backend/frontend foundations (auth, RBAC, audit, i18n, reusable UI) plus organizations, applications, customer PostgreSQL connections, and read-only schema discovery. Later phases (AI query engine, RAG, connectors, MCP) build on this.
 
 ## Stack
 
@@ -58,14 +58,18 @@ Since backend and frontend run on different ports, the backend's `CORS_ALLOWED_O
 ## Creating users
 
 ```bash
-# admin (superuser) — works with the Django admin and every admin-only API endpoint
-python manage.py createsuperuser
-
-# a pre-verified regular/customer user, from a Django shell
-python manage.py shell
->>> from apps.accounts.models import User
->>> u = User.objects.create_user(email="customer@example.com", password="CustomerPass123!")
->>> u.is_email_verified = True
->>> u.save()
+python manage.py seed_users
 ```
+Seeds three pre-verified, ready-to-log-in accounts at http://localhost:5173/login (idempotent — safe to re-run):
+
+| Email | Password | Role |
+|---|---|---|
+| `superadmin@aap.local` | `SuperAdmin123!` | `super_admin` — platform-level administration |
+| `admin@aap.local` | `Admin123!` | `admin` — day-to-day user administration |
+| `customer@aap.local` | `Customer123!` | none — regular user |
+
+`super_admin` implies every `admin` capability, plus the ability to grant/revoke `super_admin` itself. Development credentials only — never run this seed against a production database.
+
+A Django `createsuperuser` (`is_superuser=True`) also passes every admin/super_admin check, if you specifically need Django-admin (`/admin/`) access outside these app roles.
+
 Regular signups go through http://localhost:5173/register and a 6-digit email verification code — with the default console email backend, that code shows up in the backend's terminal output instead of an inbox.
