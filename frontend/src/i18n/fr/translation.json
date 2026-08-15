@@ -43,6 +43,7 @@
     "production": "Production",
     "noProjects": "Aucun projet pour le moment",
     "noProjectsBody": "Créez votre premier projet pour connecter une base de données et construire une interface d'administration.",
+    "noDescription": "Aucune description",
     "connection": "Connexion à la base de données",
     "noConnection": "Aucune base de données connectée",
     "testConnection": "Tester la connexion",

@@ -43,6 +43,7 @@
     "production": "Production",
     "noProjects": "No projects yet",
     "noProjectsBody": "Create your first project to connect a database and build an admin interface.",
+    "noDescription": "No description",
     "connection": "Database connection",
     "noConnection": "No database connected yet",
     "testConnection": "Test connection",

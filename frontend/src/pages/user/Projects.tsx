@@ -11,6 +11,12 @@ import { ErrorState } from "../../reusedComponents/ErrorState";
 import { Modal } from "../../reusedComponents/Modal";
 import { Icon } from "../../reusedComponents/Icon";
 
+const ENV_BADGE: Record<ProjectEnvironment, string> = {
+  development: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300",
+  staging: "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
+  production: "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400",
+};
+
 export default function Projects() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -88,23 +94,32 @@ export default function Projects() {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {projects.map((project) => (
             <button
               key={project.id}
               onClick={() => navigate(`/projects/${project.id}`)}
-              className="flex flex-col gap-2 rounded-xl bg-white dark:bg-gray-900 p-4 text-left shadow-sm shadow-gray-900/5 dark:shadow-none hover:shadow-md hover:shadow-gray-900/10 dark:hover:bg-gray-800 transition-shadow"
+              className="flex h-full flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 text-left shadow-sm shadow-gray-900/5 dark:shadow-none hover:shadow-md hover:shadow-gray-900/10 dark:hover:bg-gray-800 transition-shadow"
             >
               <div className="flex items-center gap-2">
-                <Icon name="folder" size={18} className="text-brand-600" />
-                <span className="font-medium text-gray-900 dark:text-gray-100">{project.name}</span>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400">
+                  <Icon name="folder" size={16} />
+                </span>
+                <span className="truncate font-medium text-gray-900 dark:text-gray-100">{project.name}</span>
               </div>
-              {project.description && (
-                <p className="line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{project.description}</p>
-              )}
-              <span className="mt-1 w-fit rounded-full bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-xs text-gray-600 dark:text-gray-300">
-                {t(`project.${project.environment}`)}
-              </span>
+              <p className="line-clamp-2 min-h-[2.5rem] text-sm text-gray-500 dark:text-gray-400">
+                {project.description || <span className="italic text-gray-400 dark:text-gray-600">{t("project.noDescription")}</span>}
+              </p>
+              <div className="mt-auto flex items-center justify-between pt-1">
+                <span
+                  className={`w-fit rounded-full px-2 py-0.5 text-xs font-medium ${ENV_BADGE[project.environment]}`}
+                >
+                  {t(`project.${project.environment}`)}
+                </span>
+                <span className="text-xs text-gray-400">
+                  {new Date(project.updated_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                </span>
+              </div>
             </button>
           ))}
         </div>
