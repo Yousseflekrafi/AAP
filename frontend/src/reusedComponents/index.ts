@@ -1,5 +1,6 @@
 export * from "./Icon";
 export * from "./Logo";
+export * from "./Footer";
 export * from "./StatusBadge";
 export * from "./Breadcrumb";
 export * from "./Sidebar";

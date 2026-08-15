@@ -11,7 +11,7 @@ export function Logo({ height = 28, className = "" }: LogoProps) {
       src={logoSrc}
       alt="AAP"
       height={height}
-      style={{ height, width: "auto" }}
+      style={{ height, width: "auto", alignSelf: "flex-start", flexShrink: 0 }}
       className={className}
     />
   );
