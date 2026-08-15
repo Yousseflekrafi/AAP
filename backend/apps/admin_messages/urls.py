@@ -5,6 +5,7 @@ from . import views
 app_name = "admin_messages"
 
 urlpatterns = [
+    path("recipients/", views.RecipientsView.as_view(), name="recipients"),
     path("conversations/", views.ConversationListCreateView.as_view(), name="conversation-list"),
     path("conversations/<uuid:id>/", views.ConversationDetailView.as_view(), name="conversation-detail"),
     path("conversations/<uuid:id>/close/", views.ConversationCloseView.as_view(), name="conversation-close"),

@@ -38,12 +38,21 @@ export async function removeMember(orgId: string, memberId: string): Promise<voi
   await apiClient.delete(`/organizations/${orgId}/members/${memberId}/`);
 }
 
-export async function fetchOrgMessages(orgId: string): Promise<Paginated<OrganizationMessage>> {
-  const { data } = await apiClient.get<Paginated<OrganizationMessage>>(`/organizations/${orgId}/messages/`);
+export async function fetchOrgMessages(orgId: string, withUserId?: string): Promise<Paginated<OrganizationMessage>> {
+  const { data } = await apiClient.get<Paginated<OrganizationMessage>>(`/organizations/${orgId}/messages/`, {
+    params: withUserId ? { with: withUserId } : undefined,
+  });
   return data;
 }
 
-export async function sendOrgMessage(orgId: string, message: string): Promise<OrganizationMessage> {
-  const { data } = await apiClient.post<OrganizationMessage>(`/organizations/${orgId}/messages/`, { message });
+export async function sendOrgMessage(
+  orgId: string,
+  message: string,
+  recipientId?: string,
+): Promise<OrganizationMessage> {
+  const { data } = await apiClient.post<OrganizationMessage>(`/organizations/${orgId}/messages/`, {
+    message,
+    recipient: recipientId ?? null,
+  });
   return data;
 }

@@ -6,11 +6,13 @@ import {
   createConversation,
   fetchConversations,
   fetchMessages,
+  fetchRecipients,
   sendMessage,
 } from "../../services/adminMessagesService";
 import { DataTable, type DataTableColumn } from "../../reusedComponents/DataTable";
 import { Modal } from "../../reusedComponents/Modal";
 import { Loader } from "../../reusedComponents/Loader";
+import { useAuth } from "../../hooks/useAuth";
 import type { AdminConversation } from "../../types/adminMessages";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -95,9 +97,11 @@ function ConversationThread({ conversation, onClose }: { conversation: AdminConv
 
 export default function Messages() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [active, setActive] = useState<AdminConversation | null>(null);
   const [showNew, setShowNew] = useState(false);
+  const [recipientId, setRecipientId] = useState("");
   const [subject, setSubject] = useState("");
 
   const { data, isLoading } = useQuery({
@@ -105,19 +109,37 @@ export default function Messages() {
     queryFn: () => fetchConversations(1),
   });
 
+  const { data: recipients } = useQuery({
+    queryKey: ["message-recipients"],
+    queryFn: fetchRecipients,
+  });
+
   const columns: DataTableColumn<AdminConversation>[] = [
+    {
+      key: "with",
+      header: "With",
+      render: (c) => {
+        const otherIsTarget = c.created_by === user?.id;
+        const name = otherIsTarget ? c.target_user_name : c.created_by_name;
+        const email = otherIsTarget ? c.target_user_email : c.created_by_email;
+        return name || email ? (
+          <span className="font-medium text-gray-900 dark:text-gray-100">{name || email}</span>
+        ) : (
+          <span className="text-gray-400">Open ticket</span>
+        );
+      },
+    },
     { key: "subject", header: "Subject" },
-    { key: "created_by_email", header: "From" },
     { key: "status", header: "Status", render: (c) => STATUS_LABEL[c.status] },
-    { key: "priority", header: "Priority" },
     { key: "updated_at", header: "Updated", render: (c) => new Date(c.updated_at).toLocaleString() },
   ];
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!subject.trim()) return;
-    await createConversation(subject);
+    if (recipients && recipients.length > 0 && !recipientId) return;
+    await createConversation(subject, recipientId || undefined);
     setSubject("");
+    setRecipientId("");
     setShowNew(false);
     void queryClient.invalidateQueries({ queryKey: ["admin-conversations"] });
   };
@@ -131,7 +153,7 @@ export default function Messages() {
           onClick={() => setShowNew(true)}
           className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
         >
-          New conversation
+          New message
         </button>
       </div>
 
@@ -147,14 +169,28 @@ export default function Messages() {
         {active && <ConversationThread conversation={active} onClose={() => setActive(null)} />}
       </Modal>
 
-      <Modal open={showNew} onClose={() => setShowNew(false)} title="Contact platform support">
+      <Modal open={showNew} onClose={() => setShowNew(false)} title="New message">
         <form onSubmit={(e) => void handleCreate(e)} className="flex flex-col gap-3">
+          {recipients && recipients.length > 0 && (
+            <select
+              required
+              value={recipientId}
+              onChange={(e) => setRecipientId(e.target.value)}
+              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+            >
+              <option value="">Select recipient...</option>
+              {recipients.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name} — {r.subtitle}
+                </option>
+              ))}
+            </select>
+          )}
           <input
             type="text"
-            required
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            placeholder="Subject"
+            placeholder="Subject (optional)"
             className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
           />
           <button type="submit" className="rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700">

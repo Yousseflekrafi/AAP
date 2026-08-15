@@ -72,6 +72,7 @@
   },
   "messages": {
     "team": "Équipe",
+    "everyone": "Tout le monde (canal d'équipe)",
     "support": "Support AAP",
     "teamHelp": "Visible par tous les membres de votre organisation.",
     "supportHelp": "En tête-à-tête avec l'équipe AAP — non visible par le reste de votre organisation.",

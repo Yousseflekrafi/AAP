@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
@@ -9,6 +10,7 @@ from apps.accounts.models import Role
 from apps.accounts.permissions import IsAdmin
 from apps.notifications.models import Notification
 from apps.notifications.services import notify, notify_many
+from apps.organizations.models import OrganizationMember
 
 from .models import AdminConversation, AdminMessage
 from .permissions import IsConversationParticipant
@@ -18,7 +20,44 @@ from .serializers import (
     AdminConversationSerializer,
     AdminMessageSerializer,
 )
-from .services import super_admin_users
+from .services import admin_users, super_admin_users
+
+
+class RecipientsView(APIView):
+    """Who this user may start a direct 1:1 with, so the compose UI can
+    show a WhatsApp-style contact picker instead of a blind ticket queue:
+    a super_admin picks a plain admin, a plain admin picks an org owner.
+    A regular customer gets an empty list — they still reach AAP support,
+    just without picking a specific person (any super_admin can pick it
+    up)."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        if user.has_role(Role.SUPER_ADMIN):
+            recipients = [
+                {"id": str(u.id), "email": u.email, "name": u.full_name, "subtitle": "Admin"}
+                for u in admin_users()
+            ]
+        elif user.has_role(Role.ADMIN):
+            owners = (
+                OrganizationMember.objects.filter(role=OrganizationMember.OrgRole.OWNER)
+                .select_related("user", "organization")
+                .exclude(user__is_active=False)
+            )
+            recipients = [
+                {
+                    "id": str(m.user.id),
+                    "email": m.user.email,
+                    "name": m.user.full_name,
+                    "subtitle": m.organization.name,
+                }
+                for m in owners
+            ]
+        else:
+            recipients = []
+        return Response(recipients)
 
 
 class ConversationListCreateView(ListCreateAPIView):
@@ -34,20 +73,35 @@ class ConversationListCreateView(ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = AdminConversation.objects.select_related("created_by", "assigned_to")
+        qs = AdminConversation.objects.select_related("created_by", "target_user", "assigned_to")
         if not user.has_role(Role.SUPER_ADMIN):
-            qs = qs.filter(created_by=user)
+            qs = qs.filter(Q(created_by=user) | Q(target_user=user))
         return qs
 
     def perform_create(self, serializer):
-        conversation = serializer.save(created_by=self.request.user)
-        notify_many(
-            super_admin_users(),
-            Notification.NotifType.ADMINISTRATION,
-            f"New admin conversation: {conversation.subject}",
-            body=f"From {self.request.user.email}",
-            action_url=f"/admin/messages/{conversation.id}",
+        sender = self.request.user
+        target_user = serializer.validated_data.get("target_user")
+        subject = serializer.validated_data.get("subject") or (
+            f"Message to {target_user.full_name}" if target_user else f"Message from {sender.full_name}"
         )
+        conversation = serializer.save(created_by=sender, subject=subject)
+
+        if target_user:
+            notify(
+                target_user,
+                Notification.NotifType.ADMINISTRATION,
+                f"New message from {sender.email}",
+                body=conversation.subject,
+                action_url=f"/admin/messages/{conversation.id}",
+            )
+        else:
+            notify_many(
+                super_admin_users(),
+                Notification.NotifType.ADMINISTRATION,
+                f"New admin conversation: {conversation.subject}",
+                body=f"From {sender.email}",
+                action_url=f"/admin/messages/{conversation.id}",
+            )
 
 
 class ConversationDetailView(RetrieveAPIView):
@@ -116,7 +170,20 @@ class MessageListCreateView(ListCreateAPIView):
         )
         conversation.save(update_fields=["status", "updated_at"])
 
-        if is_super_admin_reply:
+        # Directed 1:1 (target_user set): reply always goes to "the other
+        # side" of that pair. Otherwise it's the original open-ticket
+        # behavior: a super_admin reply goes to whoever opened it, and a
+        # non-super_admin reply broadcasts to the super_admin queue.
+        if conversation.target_user_id:
+            recipient = conversation.created_by if sender.id == conversation.target_user_id else conversation.target_user
+            notify(
+                recipient,
+                Notification.NotifType.ADMINISTRATION,
+                f"Reply on: {conversation.subject}",
+                body=f"From {sender.email}",
+                action_url=f"/admin/messages/{conversation.id}",
+            )
+        elif is_super_admin_reply:
             notify(
                 conversation.created_by,
                 Notification.NotifType.ADMINISTRATION,

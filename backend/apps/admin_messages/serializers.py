@@ -13,18 +13,25 @@ class AdminMessageSerializer(serializers.ModelSerializer):
 
 
 class AdminConversationSerializer(serializers.ModelSerializer):
+    subject = serializers.CharField(max_length=255, required=False, allow_blank=True, default="")
     created_by_email = serializers.EmailField(source="created_by.email", read_only=True)
+    created_by_name = serializers.CharField(source="created_by.full_name", read_only=True)
+    target_user_email = serializers.EmailField(source="target_user.email", read_only=True, default=None)
+    target_user_name = serializers.CharField(source="target_user.full_name", read_only=True, default=None)
     assigned_to_email = serializers.EmailField(source="assigned_to.email", read_only=True, default=None)
     message_count = serializers.IntegerField(source="messages.count", read_only=True)
 
     class Meta:
         model = AdminConversation
         fields = [
-            "id", "organization", "created_by", "created_by_email", "assigned_to", "assigned_to_email",
+            "id", "organization", "created_by", "created_by_email", "created_by_name",
+            "target_user", "target_user_email", "target_user_name",
+            "assigned_to", "assigned_to_email",
             "subject", "status", "priority", "message_count", "created_at", "updated_at",
         ]
         read_only_fields = [
-            "id", "created_by", "created_by_email", "assigned_to_email", "status",
+            "id", "created_by", "created_by_email", "created_by_name",
+            "target_user_email", "target_user_name", "assigned_to_email", "status",
             "message_count", "created_at", "updated_at",
         ]
 

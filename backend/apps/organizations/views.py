@@ -1,7 +1,9 @@
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -10,7 +12,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts import otp
 from apps.accounts.mailer import send_invite_email
 from apps.accounts.models import Role, User
 from apps.accounts.permissions import IsSuperAdmin
@@ -138,10 +139,14 @@ class OrganizationMemberListCreateView(ListCreateAPIView):
 
         invitee = User.objects.filter(email=email).first()
         created_account = False
+        generated_password = None
         if invitee is None:
+            generated_password = get_random_string(
+                12, allowed_chars="abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789"
+            )
             invitee = User.objects.create_user(
                 email=email,
-                password=get_random_string(32),
+                password=generated_password,
                 first_name=first_name,
                 last_name=last_name,
                 account_type=User.AccountType.PERSONAL,
@@ -155,8 +160,10 @@ class OrganizationMemberListCreateView(ListCreateAPIView):
         member = OrganizationMember.objects.create(organization=organization, user=invitee, role=role)
 
         if created_account:
-            token = otp.issue_password_reset_token(invitee.id)
-            send_invite_email(invitee, token, organization.name)
+            project_names = list(
+                Application.objects.filter(organization=organization).values_list("name", flat=True)
+            )
+            send_invite_email(invitee, generated_password, organization.name, project_names)
         else:
             notify(
                 invitee,
@@ -198,10 +205,32 @@ class OrganizationMessageListCreateView(ListCreateAPIView):
         return [IsAuthenticated(), IsAnyOrgMember()]
 
     def get_queryset(self):
-        return OrganizationMessage.objects.filter(organization=self.get_organization()).select_related("sender")
+        organization = self.get_organization()
+        qs = OrganizationMessage.objects.filter(organization=organization).select_related("sender", "recipient")
+        with_user_id = self.request.query_params.get("with")
+        user = self.request.user
+        if with_user_id:
+            qs = qs.filter(
+                Q(sender=user, recipient_id=with_user_id) | Q(sender_id=with_user_id, recipient=user)
+            )
+        else:
+            qs = qs.filter(recipient__isnull=True)
+        return qs
 
     def perform_create(self, serializer):
-        serializer.save(organization=self.get_organization(), sender=self.request.user)
+        organization = self.get_organization()
+        sender = self.request.user
+        recipient = serializer.validated_data.get("recipient")
+        if recipient and not organization.members.filter(user=recipient).exists():
+            raise ValidationError({"recipient": "Not a member of this organization."})
+        message = serializer.save(organization=organization, sender=sender)
+        if recipient:
+            notify(
+                recipient,
+                Notification.NotifType.ORGANIZATION,
+                f"New message from {sender.full_name}",
+                body=message.message,
+            )
 
 
 class OrganizationSuspendView(APIView):

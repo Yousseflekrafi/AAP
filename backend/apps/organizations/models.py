@@ -86,10 +86,12 @@ class OrganizationMember(models.Model):
 
 
 class OrganizationMessage(models.Model):
-    """A flat team-chat channel scoped to one organization — any member
-    (owner/admin/member alike) can post and read. Distinct from
-    AdminConversation, which is 1:1 support between a user and AAP
-    platform staff."""
+    """Team space scoped to one organization — any member (owner/admin/
+    member alike) can post and read. When recipient is null the message
+    is posted to the shared team channel; when set it's a direct 1:1
+    between sender and recipient, both still members of the same
+    organization. Distinct from AdminConversation, which is 1:1 support
+    between a user and AAP platform staff."""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="messages")
@@ -97,6 +99,13 @@ class OrganizationMessage(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="organization_messages_sent",
+    )
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="organization_messages_received",
     )
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

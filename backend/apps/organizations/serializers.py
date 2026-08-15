@@ -58,8 +58,16 @@ class SuspendOrganizationSerializer(serializers.Serializer):
 class OrganizationMessageSerializer(serializers.ModelSerializer):
     sender_email = serializers.EmailField(source="sender.email", read_only=True)
     sender_name = serializers.CharField(source="sender.full_name", read_only=True)
+    recipient_email = serializers.EmailField(source="recipient.email", read_only=True, default=None)
+    recipient_name = serializers.CharField(source="recipient.full_name", read_only=True, default=None)
 
     class Meta:
         model = OrganizationMessage
-        fields = ["id", "organization", "sender", "sender_email", "sender_name", "message", "created_at"]
-        read_only_fields = ["id", "organization", "sender", "sender_email", "sender_name", "created_at"]
+        fields = [
+            "id", "organization", "sender", "sender_email", "sender_name",
+            "recipient", "recipient_email", "recipient_name", "message", "created_at",
+        ]
+        read_only_fields = [
+            "id", "organization", "sender", "sender_email", "sender_name",
+            "recipient_email", "recipient_name", "created_at",
+        ]

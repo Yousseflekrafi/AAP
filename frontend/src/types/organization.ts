@@ -39,6 +39,9 @@ export interface OrganizationMessage {
   sender: string;
   sender_email: string;
   sender_name: string;
+  recipient: string | null;
+  recipient_email: string | null;
+  recipient_name: string | null;
   message: string;
   created_at: string;
 }

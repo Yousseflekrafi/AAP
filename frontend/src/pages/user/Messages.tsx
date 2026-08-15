@@ -9,6 +9,7 @@ import { Loader } from "../../reusedComponents/Loader";
 import { ErrorState } from "../../reusedComponents/ErrorState";
 import { Icon } from "../../reusedComponents/Icon";
 import { Modal } from "../../reusedComponents/Modal";
+import { useAuth } from "../../hooks/useAuth";
 
 type Tab = "team" | "support";
 
@@ -60,26 +61,50 @@ export default function Messages() {
 
 function TeamChat({ organizationId }: { organizationId: string }) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [message, setMessage] = useState("");
+  const [dmWith, setDmWith] = useState("");
+
+  const { data: members } = useQuery({
+    queryKey: ["members", organizationId],
+    queryFn: () => organizationsService.fetchMembers(organizationId),
+  });
+  const teammates = members?.results.filter((m) => m.user !== user?.id) ?? [];
 
   const { data, isLoading } = useQuery({
-    queryKey: ["org-messages", organizationId],
-    queryFn: () => organizationsService.fetchOrgMessages(organizationId),
+    queryKey: ["org-messages", organizationId, dmWith],
+    queryFn: () => organizationsService.fetchOrgMessages(organizationId, dmWith || undefined),
     refetchInterval: 15000,
   });
 
   const sendMutation = useMutation({
-    mutationFn: () => organizationsService.sendOrgMessage(organizationId, message),
+    mutationFn: () => organizationsService.sendOrgMessage(organizationId, message, dmWith || undefined),
     onSuccess: () => {
       setMessage("");
-      void queryClient.invalidateQueries({ queryKey: ["org-messages", organizationId] });
+      void queryClient.invalidateQueries({ queryKey: ["org-messages", organizationId, dmWith] });
     },
   });
 
   return (
     <div className="flex flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
-      <p className="text-xs text-gray-500 dark:text-gray-400">{t("messages.teamHelp")}</p>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs text-gray-500 dark:text-gray-400">{t("messages.teamHelp")}</p>
+        {teammates.length > 0 && (
+          <select
+            value={dmWith}
+            onChange={(e) => setDmWith(e.target.value)}
+            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-2 py-1.5 text-xs"
+          >
+            <option value="">{t("messages.everyone")}</option>
+            {teammates.map((m) => (
+              <option key={m.user} value={m.user}>
+                {m.user_name} — {t(`organization.${m.role}`)}
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
       <div className="flex max-h-96 flex-col gap-3 overflow-y-auto rounded-lg bg-gray-50 dark:bg-gray-800/60 p-3">
         {isLoading && <Loader size="sm" />}
         {data?.results.length === 0 && (

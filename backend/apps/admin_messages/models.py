@@ -31,6 +31,16 @@ class AdminConversation(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="admin_conversations_created"
     )
+    target_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="admin_conversations_targeted",
+        help_text="Set when this is a direct 1:1 (an admin messaging a specific org "
+        "owner, or a super_admin messaging a specific admin) rather than an "
+        "open ticket any super_admin may pick up.",
+    )
     assigned_to = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,

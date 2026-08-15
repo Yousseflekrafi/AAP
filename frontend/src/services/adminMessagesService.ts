@@ -1,6 +1,16 @@
 import { apiClient } from "./apiClient";
 import type { Paginated } from "./adminService";
-import type { AdminConversation, AdminMessage, ConversationStatus } from "../types/adminMessages";
+import type {
+  AdminConversation,
+  AdminMessage,
+  ConversationRecipient,
+  ConversationStatus,
+} from "../types/adminMessages";
+
+export async function fetchRecipients(): Promise<ConversationRecipient[]> {
+  const { data } = await apiClient.get<ConversationRecipient[]>("/admin-messages/recipients/");
+  return data;
+}
 
 export async function fetchConversations(page = 1): Promise<Paginated<AdminConversation>> {
   const { data } = await apiClient.get<Paginated<AdminConversation>>("/admin-messages/conversations/", {
@@ -14,8 +24,11 @@ export async function fetchConversation(id: string): Promise<AdminConversation> 
   return data;
 }
 
-export async function createConversation(subject: string): Promise<AdminConversation> {
-  const { data } = await apiClient.post<AdminConversation>("/admin-messages/conversations/", { subject });
+export async function createConversation(subject: string, targetUserId?: string): Promise<AdminConversation> {
+  const { data } = await apiClient.post<AdminConversation>("/admin-messages/conversations/", {
+    subject,
+    target_user: targetUserId ?? null,
+  });
   return data;
 }
 
