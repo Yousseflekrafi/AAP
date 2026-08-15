@@ -10,6 +10,7 @@ const USER_LINKS: SidebarLink[] = [
   { to: "/projects", labelKey: "nav.projects", icon: "folder" },
   { to: "/organization", labelKey: "nav.organization", icon: "building" },
   { to: "/members", labelKey: "nav.members", icon: "users" },
+  { to: "/messages", labelKey: "nav.messages", icon: "chat" },
   { to: "/notifications", labelKey: "nav.notifications", icon: "bell" },
   { to: "/settings", labelKey: "nav.settings", icon: "settings" },
   { to: "/profile", labelKey: "nav.profile", icon: "user" },

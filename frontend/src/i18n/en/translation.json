@@ -70,6 +70,16 @@
     "member": "Member",
     "remove": "Remove"
   },
+  "messages": {
+    "team": "Team",
+    "support": "AAP Support",
+    "teamHelp": "Visible to everyone in your organization.",
+    "supportHelp": "1:1 with the AAP team — not visible to the rest of your organization.",
+    "newConversation": "New conversation",
+    "subject": "Subject",
+    "writeMessage": "Write a message...",
+    "send": "Send"
+  },
   "auth": {
     "login": "Log in",
     "register": "Create account",

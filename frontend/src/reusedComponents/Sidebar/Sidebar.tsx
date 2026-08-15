@@ -20,13 +20,11 @@ export function Sidebar({ links, variant = "customer" }: { links: SidebarLink[];
 
   return (
     <aside
-      className={`hidden shrink-0 border-r md:block transition-all ${
-        isAdmin
-          ? "border-admin-border bg-admin-bg"
-          : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950"
+      className={`hidden shrink-0 md:block transition-all ${
+        isAdmin ? "bg-admin-bg shadow-xl shadow-black/20" : "bg-white dark:bg-gray-900 shadow-sm shadow-gray-900/5 dark:shadow-none"
       } ${collapsed ? "w-16" : "w-60"}`}
     >
-      <div className={`flex h-16 items-center gap-2 px-4 ${isAdmin ? "border-b border-admin-border" : ""}`}>
+      <div className="flex h-16 items-center gap-2 px-4">
         {collapsed ? (
           <span className={`text-sm font-bold ${isAdmin ? "text-brand-400" : "text-brand-600"}`}>AAP</span>
         ) : isAdmin ? (

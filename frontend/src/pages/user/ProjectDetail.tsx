@@ -58,7 +58,7 @@ export default function ProjectDetail() {
         </h1>
       </div>
 
-      <div className="flex gap-1 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex gap-1">
         {TABS.map((tb) => (
           <button
             key={tb.key}
@@ -85,7 +85,7 @@ export default function ProjectDetail() {
 function OverviewTab({ project }: { project: Project }) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-5">
+    <div className="flex flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-5 shadow-sm shadow-gray-900/5 dark:shadow-none">
       {project.description && <p className="text-sm text-gray-700 dark:text-gray-300">{project.description}</p>}
       <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
@@ -186,14 +186,14 @@ function DatabaseTab({ project }: { project: Project }) {
               placeholder="Name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
             />
             <input
               required
               placeholder="Host"
               value={form.host}
               onChange={(e) => setForm({ ...form, host: e.target.value })}
-              className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
             />
             <input
               required
@@ -201,21 +201,21 @@ function DatabaseTab({ project }: { project: Project }) {
               placeholder="Port"
               value={form.port}
               onChange={(e) => setForm({ ...form, port: Number(e.target.value) })}
-              className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
             />
             <input
               required
               placeholder="Database"
               value={form.database}
               onChange={(e) => setForm({ ...form, database: e.target.value })}
-              className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
             />
             <input
               required
               placeholder="Username"
               value={form.username}
               onChange={(e) => setForm({ ...form, username: e.target.value })}
-              className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
             />
             <input
               required
@@ -223,7 +223,7 @@ function DatabaseTab({ project }: { project: Project }) {
               placeholder={t("common.password")}
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
             />
             {testResult && !testResult.ok && <p className="text-sm text-red-600">{testResult.detail}</p>}
             <button
@@ -242,7 +242,7 @@ function DatabaseTab({ project }: { project: Project }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-4">
+      <div className="flex flex-wrap items-center gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
         <Icon name="database" className="text-brand-600" />
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{connection.name}</p>
@@ -254,7 +254,7 @@ function DatabaseTab({ project }: { project: Project }) {
           type="button"
           onClick={() => testMutation.mutate()}
           disabled={testMutation.isPending}
-          className="rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-sm hover:bg-gray-200 dark:hover:bg-gray-700"
         >
           {t("project.testConnection")}
         </button>
@@ -277,7 +277,7 @@ function DatabaseTab({ project }: { project: Project }) {
 
       {schema && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
+          <div className="rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
             <p className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
               {t("project.tables")} ({schema.tables.length})
             </p>
@@ -287,7 +287,7 @@ function DatabaseTab({ project }: { project: Project }) {
               ))}
             </ul>
           </div>
-          <div className="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
+          <div className="rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
             <p className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
               {t("project.relationships")} ({schema.relationships.length})
             </p>
@@ -350,25 +350,25 @@ function SettingsTab({ project, onDeleted }: { project: Project; onDeleted: () =
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder={t("project.name")}
-        className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
       />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         rows={2}
         placeholder={t("project.description")}
-        className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
       />
       <input
         value={applicationUrl}
         onChange={(e) => setApplicationUrl(e.target.value)}
         placeholder={t("project.applicationUrl")}
-        className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
       />
       <select
         value={environment}
         onChange={(e) => setEnvironment(e.target.value as ProjectEnvironment)}
-        className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
       >
         <option value="development">{t("project.development")}</option>
         <option value="staging">{t("project.staging")}</option>
@@ -379,7 +379,7 @@ function SettingsTab({ project, onDeleted }: { project: Project; onDeleted: () =
         onChange={(e) => setContextDescription(e.target.value)}
         rows={3}
         placeholder={t("project.contextDescription")}
-        className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
       />
       {saveMutation.isSuccess && <p className="text-sm text-gray-600 dark:text-gray-300">{t("common.save")}</p>}
       {saveMutation.isError && <p className="text-sm text-red-600">{t("common.somethingWentWrong")}</p>}

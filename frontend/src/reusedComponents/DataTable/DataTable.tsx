@@ -39,26 +39,26 @@ export function DataTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800 text-sm">
-        <thead className="bg-gray-50 dark:bg-gray-900">
+    <div className="overflow-x-auto rounded-xl bg-white dark:bg-gray-900 shadow-sm shadow-gray-900/5 dark:shadow-none">
+      <table className="min-w-full divide-y divide-gray-100 dark:divide-gray-700/60 text-sm">
+        <thead className="bg-gray-50/80 dark:bg-gray-900/40">
           <tr>
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="px-4 py-2 text-left font-medium text-gray-500 dark:text-gray-400"
+                className="px-4 py-3 text-left font-medium text-gray-500 dark:text-gray-400"
               >
                 {col.header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+        <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60">
           {rows.map((row) => (
             <tr
               key={rowKey(row)}
               onClick={() => onRowClick?.(row)}
-              className={onRowClick ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900" : ""}
+              className={onRowClick ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/40" : ""}
             >
               {columns.map((col) => (
                 <td key={col.key} className="px-4 py-2 text-gray-800 dark:text-gray-200">

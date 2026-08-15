@@ -18,7 +18,7 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div className="flex items-center gap-1 rounded-md border border-gray-200 dark:border-gray-800 p-0.5 text-xs font-medium">
+    <div className="flex items-center gap-1 rounded-md bg-gray-100 dark:bg-gray-800 p-0.5 text-xs font-medium">
       {LANGUAGES.map(({ code, label }) => (
         <button
           key={code}

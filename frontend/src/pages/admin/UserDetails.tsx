@@ -47,7 +47,7 @@ export default function UserDetails() {
       )}
       {isError && <ErrorState onRetry={() => void refetch()} />}
       {user && (
-        <div className="max-w-lg rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6">
+        <div className="max-w-lg rounded-xl bg-white dark:bg-gray-900 p-6 shadow-sm shadow-gray-900/5 dark:shadow-none">
           <dl className="grid grid-cols-[140px_1fr] gap-y-3 text-sm">
             <dt className="text-gray-500 dark:text-gray-400">{t("common.email")}</dt>
             <dd className="text-gray-900 dark:text-gray-100">{user.email}</dd>
@@ -68,12 +68,12 @@ export default function UserDetails() {
           </dl>
 
           {user.status !== "deleted" && (
-            <div className="mt-6 flex gap-3 border-t border-gray-200 dark:border-gray-800 pt-4">
+            <div className="mt-6 flex gap-3 pt-4">
               <button
                 type="button"
                 onClick={() => toggleActiveMutation.mutate()}
                 disabled={toggleActiveMutation.isPending}
-                className="flex items-center gap-1.5 rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-60"
+                className="flex items-center gap-1.5 rounded-md bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-60"
               >
                 <Icon name="power" size={14} />
                 {user.status === "deactivated" ? t("status.active") : t("status.deactivated")}
@@ -84,7 +84,7 @@ export default function UserDetails() {
                   if (window.confirm(`Delete ${user.email}? This cannot be undone.`)) deleteMutation.mutate();
                 }}
                 disabled={deleteMutation.isPending}
-                className="flex items-center gap-1.5 rounded-md border border-red-300 dark:border-red-900 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 disabled:opacity-60"
+                className="flex items-center gap-1.5 rounded-md bg-red-50 dark:bg-red-950/30 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-100 dark:hover:bg-red-950/50 disabled:opacity-60"
               >
                 <Icon name="trash" size={14} />
                 {t("status.deleted")}

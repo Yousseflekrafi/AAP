@@ -50,7 +50,7 @@ export default function Audit() {
     <div className="flex flex-col gap-4">
       <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t("admin.auditLogs")}</h1>
 
-      <div className="flex gap-2 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex gap-2">
         {(["logs", "events"] as Tab[]).map((value) => (
           <button
             key={value}

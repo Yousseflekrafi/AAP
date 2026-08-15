@@ -19,6 +19,7 @@ import Projects from "../pages/user/Projects";
 import ProjectDetail from "../pages/user/ProjectDetail";
 import OrganizationPage from "../pages/user/Organization";
 import Members from "../pages/user/Members";
+import UserMessages from "../pages/user/Messages";
 
 import Notifications from "../pages/shared/Notifications";
 
@@ -47,6 +48,7 @@ export function AppRoutes() {
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/organization" element={<OrganizationPage />} />
           <Route path="/members" element={<Members />} />
+          <Route path="/messages" element={<UserMessages />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />

@@ -17,10 +17,8 @@ export function Navbar({ variant = "customer" }: { variant?: SidebarVariant }) {
 
   return (
     <header
-      className={`flex h-16 items-center justify-between border-b px-4 ${
-        isAdminChrome
-          ? "border-admin-border bg-admin-surface"
-          : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950"
+      className={`flex h-16 items-center justify-between px-4 relative z-10 ${
+        isAdminChrome ? "bg-admin-surface shadow-md shadow-black/20" : "bg-white dark:bg-gray-900 shadow-sm shadow-gray-900/5 dark:shadow-none"
       }`}
     >
       <div className="flex items-center gap-3">
@@ -48,10 +46,10 @@ export function Navbar({ variant = "customer" }: { variant?: SidebarVariant }) {
         {user && isAdmin && (
           <Link
             to={isAdminChrome ? "/dashboard" : "/admin"}
-            className={`hidden rounded-md border px-3 py-1.5 text-sm font-medium sm:inline-block ${
+            className={`hidden rounded-md px-3 py-1.5 text-sm font-medium sm:inline-block ${
               isAdminChrome
-                ? "border-admin-border text-slate-200 hover:bg-white/5"
-                : "border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                ? "text-slate-200 hover:bg-white/5"
+                : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
             }`}
           >
             {isAdminChrome ? t("admin.myWorkspace") : t("admin.consolePanel")}

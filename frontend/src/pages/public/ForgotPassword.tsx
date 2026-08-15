@@ -30,7 +30,7 @@ export default function ForgotPassword() {
           placeholder={t("common.email")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         {info && <p className="text-sm text-green-600">{info}</p>}
         <button

@@ -10,7 +10,7 @@ export function DashboardLayout({
   variant?: SidebarVariant;
 }) {
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-950">
       <Sidebar links={links} variant={variant} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Navbar variant={variant} />

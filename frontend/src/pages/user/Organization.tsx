@@ -62,7 +62,7 @@ function OrganizationForm({ organizationId }: { organizationId: string }) {
       </h1>
 
       {!organization!.is_profile_complete && (
-        <div className="rounded-lg border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
+        <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 shadow-sm shadow-amber-900/5 dark:shadow-none px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
           {t("organization.incompleteWarning")}
         </div>
       )}
@@ -78,25 +78,25 @@ function OrganizationForm({ organizationId }: { organizationId: string }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder={t("project.name")}
-          className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         <input
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
           placeholder={t("organization.website")}
-          className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         <input
           value={country}
           onChange={(e) => setCountry(e.target.value)}
           placeholder={t("organization.country")}
-          className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         <input
           value={industry}
           onChange={(e) => setIndustry(e.target.value)}
           placeholder={t("organization.industry")}
-          className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         {saveMutation.isSuccess && <p className="text-sm text-gray-600 dark:text-gray-300">{t("common.save")}</p>}
         {saveMutation.isError && <p className="text-sm text-red-600">{t("common.somethingWentWrong")}</p>}

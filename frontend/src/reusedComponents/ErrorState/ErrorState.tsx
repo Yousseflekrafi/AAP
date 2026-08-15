@@ -8,7 +8,7 @@ interface ErrorStateProps {
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30 py-12 px-6 text-center">
+    <div className="flex flex-col items-center justify-center gap-3 rounded-xl bg-red-50 dark:bg-red-950/30 py-12 px-6 text-center shadow-sm shadow-red-900/5 dark:shadow-none">
       <p className="text-sm font-medium text-red-700 dark:text-red-300">
         {message ?? t("common.somethingWentWrong")}
       </p>

@@ -32,3 +32,13 @@ export interface OrganizationMember {
   role: OrgRole;
   joined_at: string;
 }
+
+export interface OrganizationMessage {
+  id: string;
+  organization: string;
+  sender: string;
+  sender_email: string;
+  sender_name: string;
+  message: string;
+  created_at: string;
+}

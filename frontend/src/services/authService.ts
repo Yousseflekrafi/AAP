@@ -1,4 +1,4 @@
-import { apiClient } from "./apiClient";
+import { apiClient, refreshAccessToken } from "./apiClient";
 import { setAccessToken, clearAccessToken } from "./tokenStore";
 import type { AuthResponse, LoginPayload, RegisterPayload, User } from "../types/auth";
 
@@ -58,12 +58,25 @@ export async function fetchMe(): Promise<User> {
   return data;
 }
 
-export async function tryRestoreSession(): Promise<User | null> {
-  try {
-    const { data } = await apiClient.post<{ access: string }>("/auth/refresh/");
-    setAccessToken(data.access);
-    return await fetchMe();
-  } catch {
-    return null;
-  }
+// Several components mount useAuth() in the same render (Navbar, route
+// guards, pages) and each sees status "idle" before the first one's
+// dispatch takes effect. Without this, they'd fire concurrent session
+// restores; refreshAccessToken() is itself deduped (shared with apiClient's
+// 401-retry path) so every caller here converges on the one in-flight
+// refresh instead of rotating the token out from under each other.
+let restorePromise: Promise<User | null> | null = null;
+
+export function tryRestoreSession(): Promise<User | null> {
+  restorePromise ??= (async () => {
+    const token = await refreshAccessToken();
+    if (!token) return null;
+    try {
+      return await fetchMe();
+    } catch {
+      return null;
+    }
+  })().finally(() => {
+    restorePromise = null;
+  });
+  return restorePromise;
 }

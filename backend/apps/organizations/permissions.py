@@ -22,3 +22,17 @@ class IsOrgMember(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         return membership.role in ("owner", "admin")
+
+
+class IsAnyOrgMember(BasePermission):
+    """Object-level: any member of the organization — any role — may read
+    or write. For features that are shared team space rather than
+    organization administration, like the team chat."""
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        if org_is_locked_for(obj, user):
+            return False
+        if user.has_role(Role.ADMIN):
+            return True
+        return obj.members.filter(user=user).exists()

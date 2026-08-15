@@ -22,6 +22,7 @@ const PATHS: Record<string, string> = {
   mail: "M4 4h16v16H4zM22 6l-10 7L2 6",
   trash: "M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6h16Z",
   power: "M12 2v10M18.36 6.64a9 9 0 1 1-12.73 0",
+  chat: "M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-4.1-1.06L3 21l2.06-5.4A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5Z",
 };
 
 export type IconName = keyof typeof PATHS;

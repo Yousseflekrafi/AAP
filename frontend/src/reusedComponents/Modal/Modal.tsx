@@ -25,10 +25,10 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
       <div
         role="dialog"
         aria-modal="true"
-        className="w-full max-w-lg rounded-lg bg-white dark:bg-gray-900 shadow-xl"
+        className="w-full max-w-lg rounded-xl bg-white dark:bg-gray-800 shadow-2xl shadow-gray-900/20"
       >
         {title && (
-          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-5 py-3">
+          <div className="flex items-center justify-between px-5 py-4">
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
             <button
               type="button"

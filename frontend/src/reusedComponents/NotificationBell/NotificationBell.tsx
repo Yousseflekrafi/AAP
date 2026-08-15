@@ -60,8 +60,8 @@ export function NotificationBell() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-50 mt-2 w-80 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-lg">
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 px-3 py-2">
+          <div className="absolute right-0 z-50 mt-2 w-80 rounded-xl bg-white dark:bg-gray-900 shadow-xl shadow-gray-900/10">
+            <div className="flex items-center justify-between px-3 py-2">
               <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Notifications</span>
               <button
                 type="button"
@@ -83,7 +83,7 @@ export function NotificationBell() {
                   key={n.id}
                   type="button"
                   onClick={() => void handleClickNotification(n)}
-                  className={`block w-full border-b border-gray-50 dark:border-gray-900 px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-900 ${
+                  className={`block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800 ${
                     n.is_read ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-gray-100"
                   }`}
                 >

@@ -14,16 +14,19 @@ from apps.accounts import otp
 from apps.accounts.mailer import send_invite_email
 from apps.accounts.models import Role, User
 from apps.accounts.permissions import IsSuperAdmin
+from apps.applications.models import Application
 from apps.audit.models import SecurityEvent
 from apps.audit.services import log_security_event
+from apps.connections.models import DatabaseConnection
 from apps.notifications.models import Notification
 from apps.notifications.services import notify, notify_many
 
-from .models import Organization, OrganizationMember
-from .permissions import IsOrgMember
+from .models import Organization, OrganizationMember, OrganizationMessage
+from .permissions import IsAnyOrgMember, IsOrgMember
 from .serializers import (
     InviteMemberSerializer,
     OrganizationMemberSerializer,
+    OrganizationMessageSerializer,
     OrganizationSerializer,
     SuspendOrganizationSerializer,
 )
@@ -58,6 +61,46 @@ class OrganizationDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = OrganizationSerializer
     queryset = Organization.objects.all()
     lookup_field = "id"
+
+
+class OrganizationStatsView(APIView):
+    """Any member (not just platform admins) can see their own
+    organization's dashboard numbers — projects, team, connection health —
+    scoped strictly to this one organization via IsOrgMember."""
+
+    permission_classes = [IsAuthenticated, IsOrgMember]
+
+    def get(self, request, id):
+        organization = get_object_or_404(Organization, id=id)
+        self.check_object_permissions(request, organization)
+
+        projects = Application.objects.filter(organization=organization)
+        members = organization.members.select_related("user")
+        connections = DatabaseConnection.objects.filter(application__organization=organization)
+
+        by_environment = {choice.value: 0 for choice in Application.Environment}
+        for project in projects.only("environment"):
+            by_environment[project.environment] = by_environment.get(project.environment, 0) + 1
+
+        by_role = {"owner": 0, "admin": 0, "member": 0}
+        online_count = 0
+        for member in members:
+            by_role[member.role] = by_role.get(member.role, 0) + 1
+            if member.user.is_online:
+                online_count += 1
+
+        return Response(
+            {
+                "projects": {"total": projects.count(), "by_environment": by_environment},
+                "members": {"total": members.count(), "by_role": by_role, "online": online_count},
+                "connections": {
+                    "total": connections.count(),
+                    "ok": connections.filter(last_test_ok=True).count(),
+                    "failing": connections.filter(last_test_ok=False).count(),
+                    "untested": connections.filter(last_test_ok__isnull=True).count(),
+                },
+            }
+        )
 
 
 class OrganizationMemberListCreateView(ListCreateAPIView):
@@ -136,6 +179,29 @@ class OrganizationMemberDetailView(APIView):
 
     def get_permissions(self):
         return [IsAuthenticated(), IsOrgMember()]
+
+
+class OrganizationMessageListCreateView(ListCreateAPIView):
+    """Team chat scoped to one organization — every member (owner, admin,
+    or plain member) can read and post, unlike the member-management
+    endpoints which restrict writes to owner/admin."""
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = OrganizationMessageSerializer
+
+    def get_organization(self):
+        organization = get_object_or_404(Organization, id=self.kwargs["organization_id"])
+        self.check_object_permissions(self.request, organization)
+        return organization
+
+    def get_permissions(self):
+        return [IsAuthenticated(), IsAnyOrgMember()]
+
+    def get_queryset(self):
+        return OrganizationMessage.objects.filter(organization=self.get_organization()).select_related("sender")
+
+    def perform_create(self, serializer):
+        serializer.save(organization=self.get_organization(), sender=self.request.user)
 
 
 class OrganizationSuspendView(APIView):

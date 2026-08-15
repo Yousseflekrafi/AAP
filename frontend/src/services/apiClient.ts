@@ -15,21 +15,31 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+// Shared across every caller (the 401-retry path below, and authService's
+// session bootstrap) so concurrent triggers — several components mounting
+// at once, or a bootstrap racing a premature query — share one in-flight
+// request instead of each rotating the refresh token out from under the
+// others.
 let refreshPromise: Promise<string | null> | null = null;
 
-async function refreshAccessToken(): Promise<string | null> {
-  try {
-    const response = await axios.post<{ access: string }>(
-      `${API_URL}/auth/refresh/`,
-      {},
-      { withCredentials: true },
-    );
-    setAccessToken(response.data.access);
-    return response.data.access;
-  } catch {
-    clearAccessToken();
-    return null;
-  }
+export async function refreshAccessToken(): Promise<string | null> {
+  refreshPromise ??= (async () => {
+    try {
+      const response = await axios.post<{ access: string }>(
+        `${API_URL}/auth/refresh/`,
+        {},
+        { withCredentials: true },
+      );
+      setAccessToken(response.data.access);
+      return response.data.access;
+    } catch {
+      clearAccessToken();
+      return null;
+    }
+  })().finally(() => {
+    refreshPromise = null;
+  });
+  return refreshPromise;
 }
 
 interface RetriableConfig extends InternalAxiosRequestConfig {
@@ -42,10 +52,7 @@ apiClient.interceptors.response.use(
     const config = error.config as RetriableConfig | undefined;
     if (error.response?.status === 401 && config && !config._retried) {
       config._retried = true;
-      refreshPromise ??= refreshAccessToken().finally(() => {
-        refreshPromise = null;
-      });
-      const newToken = await refreshPromise;
+      const newToken = await refreshAccessToken();
       if (newToken) {
         config.headers.Authorization = `Bearer ${newToken}`;
         return apiClient(config);

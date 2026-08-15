@@ -25,3 +25,14 @@ export async function fetchOrgStats(): Promise<OrgStats> {
   const { data } = await apiClient.get<OrgStats>("/auth/dashboard/org-stats/");
   return data;
 }
+
+export interface OrganizationStats {
+  projects: { total: number; by_environment: Record<string, number> };
+  members: { total: number; by_role: Record<string, number>; online: number };
+  connections: { total: number; ok: number; failing: number; untested: number };
+}
+
+export async function fetchOrganizationStats(organizationId: string): Promise<OrganizationStats> {
+  const { data } = await apiClient.get<OrganizationStats>(`/organizations/${organizationId}/stats/`);
+  return data;
+}

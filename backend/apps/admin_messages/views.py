@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -21,11 +22,13 @@ from .services import super_admin_users
 
 
 class ConversationListCreateView(ListCreateAPIView):
-    """super_admin sees every conversation (optionally filtered); an admin
-    sees only the ones they started — this is admin-to-platform support,
-    not an org-wide inbox."""
+    """AAP platform support: any verified user (a customer/org owner, an
+    admin, or a super_admin) may open a conversation with the platform
+    team. super_admin sees every conversation (optionally filtered);
+    everyone else sees only the ones they started — this is 1:1 support
+    with AAP, not an org-wide inbox."""
 
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAuthenticated]
     serializer_class = AdminConversationSerializer
     filterset_fields = ["status", "priority", "organization"]
 
@@ -48,17 +51,17 @@ class ConversationListCreateView(ListCreateAPIView):
 
 
 class ConversationDetailView(RetrieveAPIView):
-    permission_classes = [IsAdmin, IsConversationParticipant]
+    permission_classes = [IsAuthenticated, IsConversationParticipant]
     serializer_class = AdminConversationSerializer
     queryset = AdminConversation.objects.select_related("created_by", "assigned_to")
     lookup_field = "id"
 
 
 class ConversationCloseView(APIView):
-    """Any participant (admin on their own conversation, or super_admin on
-    any) may close/reopen — the lightweight status change everyone gets."""
+    """Any participant (the user who opened it, or super_admin on any) may
+    close/reopen — the lightweight status change everyone gets."""
 
-    permission_classes = [IsAdmin, IsConversationParticipant]
+    permission_classes = [IsAuthenticated, IsConversationParticipant]
 
     def post(self, request, id):
         conversation = get_object_or_404(AdminConversation, id=id)
@@ -89,7 +92,7 @@ class ConversationManageView(APIView):
 
 
 class MessageListCreateView(ListCreateAPIView):
-    permission_classes = [IsAdmin, IsConversationParticipant]
+    permission_classes = [IsAuthenticated, IsConversationParticipant]
     serializer_class = AdminMessageSerializer
 
     def get_conversation(self):

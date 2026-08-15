@@ -53,14 +53,14 @@ export default function Register() {
             placeholder={t("auth.firstName")}
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="w-1/2 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            className="w-1/2 rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
           />
           <input
             type="text"
             placeholder={t("auth.lastName")}
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="w-1/2 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            className="w-1/2 rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
           />
         </div>
         <input
@@ -69,7 +69,7 @@ export default function Register() {
           placeholder={t("common.email")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         <input
           type="password"
@@ -78,7 +78,7 @@ export default function Register() {
           placeholder={t("common.password")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         <div>
           <p className="mb-2 text-sm text-gray-600 dark:text-gray-300">{t("auth.accountType")}</p>
@@ -88,10 +88,10 @@ export default function Register() {
                 key={type}
                 type="button"
                 onClick={() => setAccountType(type)}
-                className={`flex-1 rounded-md border px-3 py-2 text-sm font-medium ${
+                className={`flex-1 rounded-md px-3 py-2 text-sm font-medium ring-2 ring-inset ${
                   accountType === type
-                    ? "border-brand-600 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300"
-                    : "border-gray-300 text-gray-600 dark:border-gray-700 dark:text-gray-300"
+                    ? "ring-brand-600 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300"
+                    : "ring-transparent bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
                 }`}
               >
                 {t(`auth.${type}`)}

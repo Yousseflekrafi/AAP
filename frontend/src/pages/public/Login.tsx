@@ -44,7 +44,7 @@ export default function Login() {
           placeholder={t("common.email")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         <input
           type="password"
@@ -52,7 +52,7 @@ export default function Login() {
           placeholder={t("common.password")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button

@@ -62,7 +62,7 @@ function ConversationThread({ conversation, onClose }: { conversation: AdminConv
         </button>
       </div>
 
-      <div className="max-h-72 overflow-y-auto rounded-md border border-gray-200 dark:border-gray-800 p-3">
+      <div className="max-h-72 overflow-y-auto rounded-md bg-gray-50 dark:bg-gray-800/60 p-3">
         {isLoading && <Loader size="sm" />}
         {messages?.results.map((m) => (
           <div key={m.id} className="mb-3 text-sm">
@@ -79,7 +79,7 @@ function ConversationThread({ conversation, onClose }: { conversation: AdminConv
           value={reply}
           onChange={(e) => setReply(e.target.value)}
           placeholder="Write a reply..."
-          className="flex-1 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+          className="flex-1 rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
         />
         <button type="submit" className="rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700">
           Send
@@ -155,7 +155,7 @@ export default function Messages() {
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             placeholder="Subject"
-            className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
           />
           <button type="submit" className="rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700">
             {t("common.submit")}

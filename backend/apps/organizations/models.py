@@ -83,3 +83,26 @@ class OrganizationMember(models.Model):
 
     def __str__(self):
         return f"{self.user_id} @ {self.organization_id} ({self.role})"
+
+
+class OrganizationMessage(models.Model):
+    """A flat team-chat channel scoped to one organization — any member
+    (owner/admin/member alike) can post and read. Distinct from
+    AdminConversation, which is 1:1 support between a user and AAP
+    platform staff."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="messages")
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="organization_messages_sent",
+    )
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.sender_id} @ {self.organization_id}"

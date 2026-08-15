@@ -157,14 +157,14 @@ export default function Members() {
               placeholder={t("auth.firstName")}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className="w-1/2 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="w-1/2 rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
             />
             <input
               type="text"
               placeholder={t("auth.lastName")}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-1/2 rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="w-1/2 rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
             />
           </div>
           <div className="relative">
@@ -175,13 +175,13 @@ export default function Members() {
               placeholder={t("common.email")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-transparent py-2 pl-9 pr-3 text-sm"
+              className="w-full rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 py-2 pl-9 pr-3 text-sm"
             />
           </div>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value as OrgRole)}
-            className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
           >
             <option value="member">{t("organization.member")}</option>
             <option value="admin">{t("organization.admin")}</option>

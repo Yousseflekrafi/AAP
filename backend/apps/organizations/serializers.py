@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Organization, OrganizationMember
+from .models import Organization, OrganizationMember, OrganizationMessage
 
 
 class OrganizationMemberSerializer(serializers.ModelSerializer):
@@ -53,3 +53,13 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
 class SuspendOrganizationSerializer(serializers.Serializer):
     reason = serializers.CharField(max_length=500, allow_blank=True, required=False, default="")
+
+
+class OrganizationMessageSerializer(serializers.ModelSerializer):
+    sender_email = serializers.EmailField(source="sender.email", read_only=True)
+    sender_name = serializers.CharField(source="sender.full_name", read_only=True)
+
+    class Meta:
+        model = OrganizationMessage
+        fields = ["id", "organization", "sender", "sender_email", "sender_name", "message", "created_at"]
+        read_only_fields = ["id", "organization", "sender", "sender_email", "sender_name", "created_at"]

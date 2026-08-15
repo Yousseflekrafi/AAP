@@ -93,7 +93,7 @@ export default function Projects() {
             <button
               key={project.id}
               onClick={() => navigate(`/projects/${project.id}`)}
-              className="flex flex-col gap-2 rounded-lg border border-gray-200 dark:border-gray-800 p-4 text-left hover:border-brand-400 dark:hover:border-brand-600"
+              className="flex flex-col gap-2 rounded-xl bg-white dark:bg-gray-900 p-4 text-left shadow-sm shadow-gray-900/5 dark:shadow-none hover:shadow-md hover:shadow-gray-900/10 dark:hover:bg-gray-800 transition-shadow"
             >
               <div className="flex items-center gap-2">
                 <Icon name="folder" size={18} className="text-brand-600" />
@@ -124,26 +124,26 @@ export default function Projects() {
             placeholder={t("project.name")}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
           />
           <textarea
             placeholder={t("project.description")}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
-            className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
           />
           <input
             type="url"
             placeholder={t("project.applicationUrl")}
             value={applicationUrl}
             onChange={(e) => setApplicationUrl(e.target.value)}
-            className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
           />
           <select
             value={environment}
             onChange={(e) => setEnvironment(e.target.value as ProjectEnvironment)}
-            className="rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
           >
             <option value="development">{t("project.development")}</option>
             <option value="staging">{t("project.staging")}</option>
@@ -155,7 +155,7 @@ export default function Projects() {
               value={contextDescription}
               onChange={(e) => setContextDescription(e.target.value)}
               rows={3}
-              className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="w-full rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{t("project.contextDescriptionHelp")}</p>
           </div>
