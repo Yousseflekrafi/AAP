@@ -99,7 +99,7 @@ export default function Projects() {
             <button
               key={project.id}
               onClick={() => navigate(`/projects/${project.id}`)}
-              className="flex h-full flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 text-left shadow-sm shadow-gray-900/5 dark:shadow-none hover:shadow-md hover:shadow-gray-900/10 dark:hover:bg-gray-800 transition-shadow"
+              className="flex h-full flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 text-left border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none hover:shadow-md hover:shadow-gray-900/10 dark:hover:bg-gray-800 transition-shadow"
             >
               <div className="flex items-center gap-2">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400">
@@ -139,26 +139,26 @@ export default function Projects() {
             placeholder={t("project.name")}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+            className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
           />
           <textarea
             placeholder={t("project.description")}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
-            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+            className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
           />
           <input
             type="url"
             placeholder={t("project.applicationUrl")}
             value={applicationUrl}
             onChange={(e) => setApplicationUrl(e.target.value)}
-            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+            className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
           />
           <select
             value={environment}
             onChange={(e) => setEnvironment(e.target.value as ProjectEnvironment)}
-            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+            className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
           >
             <option value="development">{t("project.development")}</option>
             <option value="staging">{t("project.staging")}</option>
@@ -170,7 +170,7 @@ export default function Projects() {
               value={contextDescription}
               onChange={(e) => setContextDescription(e.target.value)}
               rows={3}
-              className="w-full rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{t("project.contextDescriptionHelp")}</p>
           </div>

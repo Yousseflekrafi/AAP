@@ -59,7 +59,7 @@ export default function Users() {
             setSearch(e.target.value);
             setPage(1);
           }}
-          className="w-56 rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-1.5 text-sm"
+          className="w-56 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
         />
       </div>
 

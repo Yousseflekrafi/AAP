@@ -18,7 +18,7 @@ export function Navbar({ variant = "customer" }: { variant?: SidebarVariant }) {
   return (
     <header
       className={`flex h-16 items-center justify-between px-4 relative z-10 ${
-        isAdminChrome ? "bg-admin-surface shadow-md shadow-black/20" : "bg-white dark:bg-gray-900 shadow-sm shadow-gray-900/5 dark:shadow-none"
+        isAdminChrome ? "bg-admin-surface border-b border-admin-border" : "bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800"
       }`}
     >
       <div className="flex items-center gap-3">

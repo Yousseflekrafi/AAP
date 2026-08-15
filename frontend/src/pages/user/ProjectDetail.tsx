@@ -92,7 +92,7 @@ export default function ProjectDetail() {
 function OverviewTab({ project }: { project: Project }) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-5 shadow-sm shadow-gray-900/5 dark:shadow-none">
+    <div className="flex flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-5 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
       {project.description && <p className="text-sm text-gray-700 dark:text-gray-300">{project.description}</p>}
       <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
@@ -193,14 +193,14 @@ function DatabaseTab({ project }: { project: Project }) {
               placeholder="Name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
             />
             <input
               required
               placeholder="Host"
               value={form.host}
               onChange={(e) => setForm({ ...form, host: e.target.value })}
-              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
             />
             <input
               required
@@ -208,21 +208,21 @@ function DatabaseTab({ project }: { project: Project }) {
               placeholder="Port"
               value={form.port}
               onChange={(e) => setForm({ ...form, port: Number(e.target.value) })}
-              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
             />
             <input
               required
               placeholder="Database"
               value={form.database}
               onChange={(e) => setForm({ ...form, database: e.target.value })}
-              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
             />
             <input
               required
               placeholder="Username"
               value={form.username}
               onChange={(e) => setForm({ ...form, username: e.target.value })}
-              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
             />
             <input
               required
@@ -230,7 +230,7 @@ function DatabaseTab({ project }: { project: Project }) {
               placeholder={t("common.password")}
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
             />
             {testResult && !testResult.ok && <p className="text-sm text-red-600">{testResult.detail}</p>}
             <button
@@ -249,7 +249,7 @@ function DatabaseTab({ project }: { project: Project }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
+      <div className="flex flex-wrap items-center gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
         <Icon name="database" className="text-brand-600" />
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{connection.name}</p>
@@ -284,7 +284,7 @@ function DatabaseTab({ project }: { project: Project }) {
 
       {schema && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
+          <div className="rounded-xl bg-white dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
             <p className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
               {t("project.tables")} ({schema.tables.length})
             </p>
@@ -294,7 +294,7 @@ function DatabaseTab({ project }: { project: Project }) {
               ))}
             </ul>
           </div>
-          <div className="rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
+          <div className="rounded-xl bg-white dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
             <p className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
               {t("project.relationships")} ({schema.relationships.length})
             </p>
@@ -381,7 +381,7 @@ function DataAccessTab({ project }: { project: Project }) {
         </button>
       </div>
 
-      <div className="rounded-xl bg-white dark:bg-gray-900 shadow-sm shadow-gray-900/5 dark:shadow-none">
+      <div className="rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
         {schema.tables.map((tbl: DatabaseTable) => (
           <div key={tbl.id} className="border-b border-gray-100 dark:border-gray-800/60 last:border-0">
             <div className="flex items-center gap-3 px-4 py-3">
@@ -501,7 +501,7 @@ function AdminBuilderTab({ project }: { project: Project }) {
           const chart: ChartConfig | undefined = tableConfig.charts[0];
 
           return (
-            <div key={tbl.id} className="rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
+            <div key={tbl.id} className="rounded-xl bg-white dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
               <p className="mb-3 flex items-center gap-2 font-medium text-gray-900 dark:text-gray-100">
                 <Icon name="folder" size={16} className="text-brand-600" />
                 {tbl.name}
@@ -555,7 +555,7 @@ function AdminBuilderTab({ project }: { project: Project }) {
                             charts: type ? [{ type, column: chart?.column ?? numericColumns[0].name }] : [],
                           });
                         }}
-                        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent px-2 py-1.5 text-sm"
+                        className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                       >
                         <option value="">{t("project.noChart")}</option>
                         <option value="bar">Bar</option>
@@ -568,7 +568,7 @@ function AdminBuilderTab({ project }: { project: Project }) {
                           onChange={(e) =>
                             updateTableConfig(tbl.id, { charts: [{ type: chart.type, column: e.target.value }] })
                           }
-                          className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent px-2 py-1.5 text-sm"
+                          className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                         >
                           {numericColumns.map((col: DatabaseColumn) => (
                             <option key={col.id} value={col.name}>
@@ -635,25 +635,25 @@ function SettingsTab({ project, onDeleted }: { project: Project; onDeleted: () =
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder={t("project.name")}
-        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+        className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
       />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         rows={2}
         placeholder={t("project.description")}
-        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+        className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
       />
       <input
         value={applicationUrl}
         onChange={(e) => setApplicationUrl(e.target.value)}
         placeholder={t("project.applicationUrl")}
-        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+        className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
       />
       <select
         value={environment}
         onChange={(e) => setEnvironment(e.target.value as ProjectEnvironment)}
-        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+        className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
       >
         <option value="development">{t("project.development")}</option>
         <option value="staging">{t("project.staging")}</option>
@@ -664,7 +664,7 @@ function SettingsTab({ project, onDeleted }: { project: Project; onDeleted: () =
         onChange={(e) => setContextDescription(e.target.value)}
         rows={3}
         placeholder={t("project.contextDescription")}
-        className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+        className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
       />
       {saveMutation.isSuccess && <p className="text-sm text-gray-600 dark:text-gray-300">{t("common.save")}</p>}
       {saveMutation.isError && <p className="text-sm text-red-600">{t("common.somethingWentWrong")}</p>}

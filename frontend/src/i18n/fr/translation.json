@@ -28,6 +28,12 @@
     "organization": "Organisation",
     "members": "Membres"
   },
+  "settings": {
+    "security": "Sécurité",
+    "securitySubtitle": "Modifiez le mot de passe de votre compte.",
+    "passwordsDontMatch": "Le nouveau mot de passe et la confirmation ne correspondent pas.",
+    "passwordUpdated": "Mot de passe mis à jour."
+  },
   "project": {
     "overview": "Aperçu",
     "database": "Base de données",
@@ -109,6 +115,8 @@
     "resendCode": "Renvoyer le code",
     "resetPasswordTitle": "Réinitialiser le mot de passe",
     "newPassword": "Nouveau mot de passe",
+    "currentPassword": "Mot de passe actuel",
+    "confirmNewPassword": "Confirmer le nouveau mot de passe",
     "invalidCredentials": "E-mail ou mot de passe invalide.",
     "accountType": "Type de compte",
     "personal": "Personnel",

@@ -87,14 +87,14 @@ function TeamChat({ organizationId }: { organizationId: string }) {
   });
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
+    <div className="flex flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
       <div className="flex items-center justify-between gap-3">
         <p className="text-xs text-gray-500 dark:text-gray-400">{t("messages.teamHelp")}</p>
         {teammates.length > 0 && (
           <select
             value={dmWith}
             onChange={(e) => setDmWith(e.target.value)}
-            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-2 py-1.5 text-xs"
+            className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-xs focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
           >
             <option value="">{t("messages.everyone")}</option>
             {teammates.map((m) => (
@@ -131,7 +131,7 @@ function TeamChat({ organizationId }: { organizationId: string }) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={t("messages.writeMessage")}
-          className="flex-1 rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+          className="flex-1 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
         />
         <button
           type="submit"
@@ -188,7 +188,7 @@ function SupportConversations() {
         </button>
       </div>
 
-      <div className="rounded-xl bg-white dark:bg-gray-900 shadow-sm shadow-gray-900/5 dark:shadow-none">
+      <div className="rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
         {isLoading && (
           <div className="flex justify-center py-8">
             <Loader size="sm" />
@@ -228,7 +228,7 @@ function SupportConversations() {
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             placeholder={t("messages.subject")}
-            className="rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+            className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
           />
           <button
             type="submit"
@@ -286,7 +286,7 @@ function SupportThread({ conversation }: { conversation: AdminConversation }) {
           value={reply}
           onChange={(e) => setReply(e.target.value)}
           placeholder={t("messages.writeMessage")}
-          className="flex-1 rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500/30 px-3 py-2 text-sm"
+          className="flex-1 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
         />
         <button type="submit" className="rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700">
           {t("messages.send")}

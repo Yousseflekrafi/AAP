@@ -6,20 +6,20 @@
   --font-sans: "Inter", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* AAP functional accent: a refined slate-teal scale. Gray-leaning at the
-     low/high ends for chrome, with a confident teal at the 500-700 stops
-     used for primary actions, links and highlights. */
-  --color-brand-50: #f4f7f7;
-  --color-brand-100: #e6edec;
-  --color-brand-200: #cddbd9;
-  --color-brand-300: #a3bfbb;
-  --color-brand-400: #6f9d97;
-  --color-brand-500: #3f7d75;
-  --color-brand-600: #2c645d;
-  --color-brand-700: #24504b;
-  --color-brand-800: #1f403c;
-  --color-brand-900: #1b3532;
-  --color-brand-950: #0d1e1c;
+  /* AAP brand: the logo red, used as the sole accent for primary actions,
+     active navigation, and identity. Anchored on #C8101E (600) / #A80D19
+     (700, hover) / #FDECEE (50, tint backgrounds for active/selected state). */
+  --color-brand-50: #fdecee;
+  --color-brand-100: #fcd9dd;
+  --color-brand-200: #f8b4bb;
+  --color-brand-300: #f08a96;
+  --color-brand-400: #e35667;
+  --color-brand-500: #d6293a;
+  --color-brand-600: #c8101e;
+  --color-brand-700: #a80d19;
+  --color-brand-800: #8a0b15;
+  --color-brand-900: #6f0910;
+  --color-brand-950: #3d0508;
 
   /* Admin console gets a distinct slate chrome so it reads as a different
      surface from the customer workspace at a glance. */

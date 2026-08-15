@@ -10,7 +10,7 @@ export default function Profile() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t("nav.profile")}</h1>
-      <div className="max-w-lg rounded-xl bg-white dark:bg-gray-900 p-6 shadow-sm shadow-gray-900/5 dark:shadow-none">
+      <div className="max-w-lg rounded-xl bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
         <dl className="grid grid-cols-[140px_1fr] gap-y-3 text-sm">
           <dt className="text-gray-500 dark:text-gray-400">{t("common.email")}</dt>
           <dd className="text-gray-900 dark:text-gray-100">{user.email}</dd>
