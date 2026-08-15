@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,12 +8,14 @@ import { Loader } from "../../reusedComponents/Loader";
 import { ErrorState } from "../../reusedComponents/ErrorState";
 import { StatusBadge, OnlineDot } from "../../reusedComponents/StatusBadge";
 import { Icon } from "../../reusedComponents/Icon";
+import { ConfirmDialog } from "../../reusedComponents/Modal";
 
 export default function UserDetails() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const { data: user, isLoading, isError, refetch } = useQuery({
     queryKey: ["admin-user", id],
@@ -80,9 +83,7 @@ export default function UserDetails() {
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  if (window.confirm(`Delete ${user.email}? This cannot be undone.`)) deleteMutation.mutate();
-                }}
+                onClick={() => setConfirmDelete(true)}
                 disabled={deleteMutation.isPending}
                 className="flex items-center gap-1.5 rounded-md bg-red-50 dark:bg-red-950/30 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-100 dark:hover:bg-red-950/50 disabled:opacity-60"
               >
@@ -93,6 +94,16 @@ export default function UserDetails() {
           )}
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmDelete}
+        message={`Delete ${user?.email}? This cannot be undone.`}
+        onCancel={() => setConfirmDelete(false)}
+        onConfirm={() => {
+          setConfirmDelete(false);
+          deleteMutation.mutate();
+        }}
+      />
     </div>
   );
 }

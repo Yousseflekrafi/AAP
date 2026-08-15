@@ -27,6 +27,12 @@ class DatabaseTable(models.Model):
     schema = models.ForeignKey(DatabaseSchema, on_delete=models.CASCADE, related_name="tables")
     name = models.CharField(max_length=150)
     description = models.TextField(blank=True)
+    is_selected = models.BooleanField(
+        default=True,
+        help_text="Whether this table is part of the project's allowed data-access "
+        "whitelist (spec section 16) — set by the recommendation heuristic on "
+        "discovery, adjustable by the customer.",
+    )
 
     class Meta:
         constraints = [
@@ -47,6 +53,11 @@ class DatabaseColumn(models.Model):
     is_primary_key = models.BooleanField(default=False)
     ordinal_position = models.PositiveIntegerField(default=0)
     description = models.TextField(blank=True)
+    is_allowed = models.BooleanField(
+        default=True,
+        help_text="Column-level permission (spec section 17) — whether this column "
+        "is exposed at all within its table's allowed data access.",
+    )
 
     class Meta:
         constraints = [

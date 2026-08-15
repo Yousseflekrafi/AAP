@@ -28,12 +28,20 @@ class Application(models.Model):
         help_text="Plain-language description of what the administration should manage — "
         "becomes context for schema analysis and AI setup.",
     )
+    admin_config = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Admin Builder config: per selected table, which columns are filters, "
+        "which are form fields, and any chart definitions. Keyed by table id.",
+    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
         on_delete=models.SET_NULL,
         related_name="applications_created",
     )
+    is_deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

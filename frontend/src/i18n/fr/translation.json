@@ -12,7 +12,8 @@
     "retry": "Réessayer",
     "logout": "Déconnexion",
     "email": "E-mail",
-    "password": "Mot de passe"
+    "password": "Mot de passe",
+    "confirm": "Confirmer"
   },
   "nav": {
     "home": "Accueil",
@@ -51,7 +52,19 @@
     "connectionOk": "Connexion réussie",
     "connectionFailed": "Échec de la connexion",
     "tables": "Tables",
-    "relationships": "Relations"
+    "relationships": "Relations",
+    "dataAccess": "Accès aux données",
+    "adminBuilder": "Générateur d'admin",
+    "dataAccessHelp": "Choisissez les tables et colonnes pouvant être exposées en toute sécurité. C'est la limite de sécurité — l'IA ne peut jamais voir ni toucher ce qui n'est pas sélectionné ici.",
+    "recommend": "Recommander",
+    "columns": "Colonnes",
+    "adminBuilderHelp": "Configurez les filtres, les champs de formulaire et les graphiques pour chaque table sélectionnée pour l'accès aux données.",
+    "noTablesSelected": "Aucune table sélectionnée. Rendez-vous dans Accès aux données pour choisir les tables à exposer.",
+    "filters": "Filtres",
+    "formFields": "Champs du formulaire",
+    "chart": "Graphique",
+    "noNumericColumns": "Aucune colonne numérique disponible pour les graphiques",
+    "noChart": "Aucun graphique"
   },
   "organization": {
     "profile": "Profil de l'organisation",

@@ -9,7 +9,7 @@ import { Loader } from "../../reusedComponents/Loader";
 import { ErrorState } from "../../reusedComponents/ErrorState";
 import { DataTable } from "../../reusedComponents/DataTable";
 import { Icon } from "../../reusedComponents/Icon";
-import { Modal } from "../../reusedComponents/Modal";
+import { Modal, ConfirmDialog } from "../../reusedComponents/Modal";
 import { StatusBadge, OnlineDot } from "../../reusedComponents/StatusBadge";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -31,6 +31,7 @@ export default function Members() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<OrgRole>("member");
+  const [memberToRemove, setMemberToRemove] = useState<OrganizationMember | null>(null);
 
   const inviteMutation = useMutation({
     mutationFn: () =>
@@ -123,9 +124,7 @@ export default function Members() {
                     m.role !== "owner" ? (
                       <button
                         type="button"
-                        onClick={() => {
-                          if (window.confirm(`Remove ${m.user_email}?`)) removeMutation.mutate(m.id);
-                        }}
+                        onClick={() => setMemberToRemove(m)}
                         className="flex items-center gap-1 text-sm text-red-600 hover:underline"
                       >
                         <Icon name="trash" size={14} />
@@ -197,6 +196,16 @@ export default function Members() {
           </button>
         </form>
       </Modal>
+
+      <ConfirmDialog
+        open={!!memberToRemove}
+        message={`Remove ${memberToRemove?.user_email}?`}
+        onCancel={() => setMemberToRemove(null)}
+        onConfirm={() => {
+          if (memberToRemove) removeMutation.mutate(memberToRemove.id);
+          setMemberToRemove(null);
+        }}
+      />
     </div>
   );
 }
