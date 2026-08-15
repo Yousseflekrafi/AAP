@@ -1,6 +1,35 @@
+import re
+
 import psycopg
 
 from .models import DatabaseColumn, DatabaseRelationship, DatabaseSchema, DatabaseTable
+
+# Spec section 15/16: propose relevant business tables, exclude internal
+# plumbing (audit_logs, migrations, sessions, ...) by default — the
+# customer reviews and adjusts before confirming. Applied once, at table
+# creation, so it never overwrites a customer's manual choice on re-sync.
+_INTERNAL_TABLE_PATTERNS = re.compile(
+    r"^(django_|auth_|celery_|oauth_)|"
+    r"(migration|session|audit_log|audit_trail|password_reset|api_key|"
+    r"webhook|job_queue|task_queue|cache|outbox|token|otp)s?$",
+    re.IGNORECASE,
+)
+
+# Spec section 17: block obviously sensitive columns by default (e.g.
+# password_hash, internal_notes) even on an otherwise-selected table.
+_SENSITIVE_COLUMN_PATTERNS = re.compile(
+    r"password|secret|token|_hash$|api_key|credit_card|ssn|ccn|ccv|"
+    r"ccnum|internal_notes|private_key",
+    re.IGNORECASE,
+)
+
+
+def recommend_table_selection(table_name):
+    return not _INTERNAL_TABLE_PATTERNS.search(table_name)
+
+
+def recommend_column_allowed(column_name):
+    return not _SENSITIVE_COLUMN_PATTERNS.search(column_name)
 
 _COLUMNS_SQL = """
     SELECT table_name, column_name, data_type, is_nullable, ordinal_position
@@ -63,10 +92,14 @@ def discover_schema(connection, schema_name="public"):
     for table_name, column_name, data_type, is_nullable, ordinal_position in columns_rows:
         table = tables_by_name.get(table_name)
         if table is None:
-            table, _ = DatabaseTable.objects.get_or_create(schema=schema, name=table_name)
+            table, created = DatabaseTable.objects.get_or_create(
+                schema=schema,
+                name=table_name,
+                defaults={"is_selected": recommend_table_selection(table_name)},
+            )
             tables_by_name[table_name] = table
 
-        column, _ = DatabaseColumn.objects.update_or_create(
+        column, created = DatabaseColumn.objects.update_or_create(
             table=table,
             name=column_name,
             defaults={
@@ -76,6 +109,9 @@ def discover_schema(connection, schema_name="public"):
                 "ordinal_position": ordinal_position,
             },
         )
+        if created:
+            column.is_allowed = recommend_column_allowed(column_name)
+            column.save(update_fields=["is_allowed"])
         columns_by_key[(table_name, column_name)] = column
 
     DatabaseRelationship.objects.filter(from_table__schema=schema).delete()

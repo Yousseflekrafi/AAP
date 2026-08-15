@@ -1,6 +1,6 @@
 import { apiClient } from "./apiClient";
 import type { Paginated } from "./adminService";
-import type { Project } from "../types/project";
+import type { AdminConfig, Project } from "../types/project";
 
 export interface CreateProjectPayload {
   name: string;
@@ -32,4 +32,9 @@ export async function updateProject(id: string, payload: Partial<CreateProjectPa
 
 export async function deleteProject(id: string): Promise<void> {
   await apiClient.delete(`/projects/${id}/`);
+}
+
+export async function updateAdminConfig(id: string, adminConfig: AdminConfig): Promise<Project> {
+  const { data } = await apiClient.patch<Project>(`/projects/${id}/`, { admin_config: adminConfig });
+  return data;
 }

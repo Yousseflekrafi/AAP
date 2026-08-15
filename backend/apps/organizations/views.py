@@ -43,7 +43,7 @@ class OrganizationListCreateView(ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = Organization.objects.all()
+        qs = Organization.objects.filter(is_deleted=False)
         if not user.has_role(Role.ADMIN):
             qs = qs.filter(members__user=user)
         return qs.distinct()
@@ -60,8 +60,15 @@ class OrganizationListCreateView(ListCreateAPIView):
 class OrganizationDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOrgMember]
     serializer_class = OrganizationSerializer
-    queryset = Organization.objects.all()
     lookup_field = "id"
+
+    def get_queryset(self):
+        return Organization.objects.filter(is_deleted=False)
+
+    def perform_destroy(self, instance):
+        instance.is_deleted = True
+        instance.deleted_at = timezone.now()
+        instance.save(update_fields=["is_deleted", "deleted_at"])
 
 
 class OrganizationStatsView(APIView):
@@ -72,7 +79,7 @@ class OrganizationStatsView(APIView):
     permission_classes = [IsAuthenticated, IsOrgMember]
 
     def get(self, request, id):
-        organization = get_object_or_404(Organization, id=id)
+        organization = get_object_or_404(Organization, id=id, is_deleted=False)
         self.check_object_permissions(request, organization)
 
         projects = Application.objects.filter(organization=organization)
@@ -114,7 +121,7 @@ class OrganizationMemberListCreateView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_organization(self):
-        organization = get_object_or_404(Organization, id=self.kwargs["organization_id"])
+        organization = get_object_or_404(Organization, id=self.kwargs["organization_id"], is_deleted=False)
         self.check_object_permissions(self.request, organization)
         return organization
 
@@ -178,7 +185,7 @@ class OrganizationMemberDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, organization_id, member_id):
-        organization = get_object_or_404(Organization, id=organization_id)
+        organization = get_object_or_404(Organization, id=organization_id, is_deleted=False)
         self.check_object_permissions(request, organization)
         member = get_object_or_404(OrganizationMember, id=member_id, organization=organization)
         member.delete()
@@ -197,7 +204,7 @@ class OrganizationMessageListCreateView(ListCreateAPIView):
     serializer_class = OrganizationMessageSerializer
 
     def get_organization(self):
-        organization = get_object_or_404(Organization, id=self.kwargs["organization_id"])
+        organization = get_object_or_404(Organization, id=self.kwargs["organization_id"], is_deleted=False)
         self.check_object_permissions(self.request, organization)
         return organization
 
@@ -242,7 +249,7 @@ class OrganizationSuspendView(APIView):
     permission_classes = [IsSuperAdmin]
 
     def post(self, request, id):
-        organization = get_object_or_404(Organization, id=id)
+        organization = get_object_or_404(Organization, id=id, is_deleted=False)
         serializer = SuspendOrganizationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -271,7 +278,7 @@ class OrganizationReactivateView(APIView):
     permission_classes = [IsSuperAdmin]
 
     def post(self, request, id):
-        organization = get_object_or_404(Organization, id=id)
+        organization = get_object_or_404(Organization, id=id, is_deleted=False)
         organization.status = Organization.Status.ACTIVE
         organization.suspended_reason = ""
         organization.suspended_by = None

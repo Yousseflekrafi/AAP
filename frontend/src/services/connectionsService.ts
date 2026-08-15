@@ -1,6 +1,6 @@
 import { apiClient } from "./apiClient";
 import type { Paginated } from "./adminService";
-import type { DatabaseConnection, DatabaseSchema } from "../types/connection";
+import type { DatabaseColumn, DatabaseConnection, DatabaseSchema, DatabaseTable } from "../types/connection";
 
 export interface ConnectionPayload {
   name: string;
@@ -34,5 +34,20 @@ export async function discoverSchema(connectionId: string): Promise<{ schema: st
 
 export async function fetchSchema(connectionId: string): Promise<DatabaseSchema> {
   const { data } = await apiClient.get<DatabaseSchema>(`/connections/${connectionId}/schema/`);
+  return data;
+}
+
+export async function recommendSelection(connectionId: string): Promise<DatabaseSchema> {
+  const { data } = await apiClient.post<DatabaseSchema>(`/connections/${connectionId}/recommend/`);
+  return data;
+}
+
+export async function setTableSelected(tableId: string, isSelected: boolean): Promise<DatabaseTable> {
+  const { data } = await apiClient.patch<DatabaseTable>(`/schema-tables/${tableId}/`, { is_selected: isSelected });
+  return data;
+}
+
+export async function setColumnAllowed(columnId: string, isAllowed: boolean): Promise<DatabaseColumn> {
+  const { data } = await apiClient.patch<DatabaseColumn>(`/schema-columns/${columnId}/`, { is_allowed: isAllowed });
   return data;
 }

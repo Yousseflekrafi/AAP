@@ -12,7 +12,8 @@
     "retry": "Retry",
     "logout": "Log out",
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "confirm": "Confirm"
   },
   "nav": {
     "home": "Home",
@@ -51,7 +52,19 @@
     "connectionOk": "Connection succeeded",
     "connectionFailed": "Connection failed",
     "tables": "Tables",
-    "relationships": "Relationships"
+    "relationships": "Relationships",
+    "dataAccess": "Data Access",
+    "adminBuilder": "Admin Builder",
+    "dataAccessHelp": "Choose which tables and columns are safe to expose. This is the security boundary — the AI can never see or touch what's not selected here.",
+    "recommend": "Recommend",
+    "columns": "Columns",
+    "adminBuilderHelp": "Configure filters, form fields, and charts for each table you've selected for data access.",
+    "noTablesSelected": "No tables selected yet. Go to Data Access to choose which tables to expose.",
+    "filters": "Filters",
+    "formFields": "Form fields",
+    "chart": "Chart",
+    "noNumericColumns": "No numeric columns available for charting",
+    "noChart": "No chart"
   },
   "organization": {
     "profile": "Organization profile",

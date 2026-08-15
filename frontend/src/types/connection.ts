@@ -22,12 +22,14 @@ export interface DatabaseColumn {
   is_primary_key: boolean;
   ordinal_position: number;
   description: string;
+  is_allowed: boolean;
 }
 
 export interface DatabaseTable {
   id: string;
   name: string;
   description: string;
+  is_selected: boolean;
   columns: DatabaseColumn[];
 }
 

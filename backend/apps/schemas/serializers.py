@@ -6,7 +6,10 @@ from .models import DatabaseColumn, DatabaseRelationship, DatabaseSchema, Databa
 class DatabaseColumnSerializer(serializers.ModelSerializer):
     class Meta:
         model = DatabaseColumn
-        fields = ["id", "name", "data_type", "is_nullable", "is_primary_key", "ordinal_position", "description"]
+        fields = [
+            "id", "name", "data_type", "is_nullable", "is_primary_key", "ordinal_position",
+            "description", "is_allowed",
+        ]
 
 
 class DatabaseTableSerializer(serializers.ModelSerializer):
@@ -14,7 +17,21 @@ class DatabaseTableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DatabaseTable
-        fields = ["id", "name", "description", "columns"]
+        fields = ["id", "name", "description", "is_selected", "columns"]
+
+
+class TableSelectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DatabaseTable
+        fields = ["id", "is_selected"]
+        read_only_fields = ["id"]
+
+
+class ColumnAllowedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DatabaseColumn
+        fields = ["id", "is_allowed"]
+        read_only_fields = ["id"]
 
 
 class DatabaseRelationshipSerializer(serializers.ModelSerializer):
