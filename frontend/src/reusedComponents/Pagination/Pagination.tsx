@@ -19,7 +19,7 @@ export function Pagination({ page, pageSize, totalCount, onPageChange }: Paginat
           type="button"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
-          className="rounded-md bg-white dark:bg-gray-800 px-3 py-1 shadow-sm shadow-gray-900/5 dark:shadow-none disabled:opacity-40"
+          className="rounded-md bg-white dark:bg-gray-800 px-3 py-1 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none disabled:opacity-40"
         >
           Previous
         </button>
@@ -27,7 +27,7 @@ export function Pagination({ page, pageSize, totalCount, onPageChange }: Paginat
           type="button"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
-          className="rounded-md bg-white dark:bg-gray-800 px-3 py-1 shadow-sm shadow-gray-900/5 dark:shadow-none disabled:opacity-40"
+          className="rounded-md bg-white dark:bg-gray-800 px-3 py-1 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none disabled:opacity-40"
         >
           Next
         </button>

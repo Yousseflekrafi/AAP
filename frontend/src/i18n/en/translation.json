@@ -28,6 +28,12 @@
     "organization": "Organization",
     "members": "Members"
   },
+  "settings": {
+    "security": "Security",
+    "securitySubtitle": "Change your account password.",
+    "passwordsDontMatch": "New password and confirmation don't match.",
+    "passwordUpdated": "Password updated."
+  },
   "project": {
     "overview": "Overview",
     "database": "Database",
@@ -109,6 +115,8 @@
     "resendCode": "Resend code",
     "resetPasswordTitle": "Reset your password",
     "newPassword": "New password",
+    "currentPassword": "Current password",
+    "confirmNewPassword": "Confirm new password",
     "invalidCredentials": "Invalid email or password.",
     "accountType": "Account type",
     "personal": "Personal",

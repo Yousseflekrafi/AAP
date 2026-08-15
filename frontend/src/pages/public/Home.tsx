@@ -108,7 +108,7 @@ export default function Home() {
           {t("home.problemTitle")}
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div className="rounded-xl bg-white dark:bg-gray-900 p-6 shadow-sm shadow-gray-900/5 dark:shadow-none">
+          <div className="rounded-xl bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
             <p className="mb-3 text-sm font-semibold text-gray-900 dark:text-gray-100">{t("home.problemHaveTitle")}</p>
             <ul className="flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-300">
               {[1, 2, 3, 4].map((n) => (
@@ -119,7 +119,7 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <div className="rounded-xl bg-white dark:bg-gray-900 p-6 shadow-sm shadow-gray-900/5 dark:shadow-none">
+          <div className="rounded-xl bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
             <p className="mb-3 text-sm font-semibold text-gray-900 dark:text-gray-100">{t("home.problemRequireTitle")}</p>
             <ul className="flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-300">
               {[1, 2, 3, 4].map((n) => (

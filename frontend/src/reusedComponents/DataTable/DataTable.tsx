@@ -39,7 +39,7 @@ export function DataTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl bg-white dark:bg-gray-900 shadow-sm shadow-gray-900/5 dark:shadow-none">
+    <div className="overflow-x-auto rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
       <table className="min-w-full divide-y divide-gray-100 dark:divide-gray-700/60 text-sm">
         <thead className="bg-gray-50/80 dark:bg-gray-900/40">
           <tr>

@@ -23,7 +23,7 @@ function StatCard({
   onAction: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 shadow-sm shadow-gray-900/5 dark:shadow-none">
+    <div className="flex flex-col gap-3 rounded-xl bg-white dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
       <div className="flex items-center gap-2">
         <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400">
           <Icon name={icon} size={18} />
