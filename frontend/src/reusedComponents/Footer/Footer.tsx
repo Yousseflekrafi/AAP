@@ -23,6 +23,9 @@ export function Footer() {
             <a href="/#security" className="text-sm text-gray-600 dark:text-gray-300 hover:text-brand-600">
               {t("home.navSecurity")}
             </a>
+            <Link to="/pricing" className="text-sm text-gray-600 dark:text-gray-300 hover:text-brand-600">
+              {t("home.navPricing")}
+            </Link>
           </div>
           <div className="flex flex-col gap-2">
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">{t("footer.company")}</p>
