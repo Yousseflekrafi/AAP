@@ -23,7 +23,7 @@ from . import bruteforce, otp
 from .cookies import clear_refresh_cookie, set_refresh_cookie
 from .mailer import send_password_reset_email, send_verification_email
 from .models import Role, User
-from .permissions import IsAdmin
+from .permissions import HasPermission
 from .serializers import (
     AdminUserRoleSerializer,
     AdminUserStatusSerializer,
@@ -31,6 +31,7 @@ from .serializers import (
     ForgotPasswordSerializer,
     GoogleLoginSerializer,
     LoginSerializer,
+    ProfileUpdateSerializer,
     RegisterSerializer,
     ResendVerificationSerializer,
     ResetPasswordSerializer,
@@ -293,6 +294,15 @@ class MeView(RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
+    def get_serializer_class(self):
+        if self.request.method in ("PUT", "PATCH"):
+            return ProfileUpdateSerializer
+        return UserSerializer
+
+    def update(self, request, *args, **kwargs):
+        super().update(request, *args, **kwargs)
+        return Response(UserSerializer(self.get_object()).data)
+
 
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
@@ -312,9 +322,9 @@ class ChangePasswordView(APIView):
 
 
 class UserListView(ListAPIView):
-    """Admin-only: powers the admin Users page."""
+    """Super-admin-only: powers the admin Users page."""
 
-    permission_classes = [IsAdmin]
+    permission_classes = [HasPermission("users.view_all")]
     serializer_class = UserSerializer
     queryset = User.objects.all().prefetch_related("roles")
     filterset_fields = ["is_active", "is_deleted", "is_email_verified", "auth_provider"]
@@ -322,18 +332,18 @@ class UserListView(ListAPIView):
 
 
 class UserDetailView(RetrieveAPIView):
-    """Admin-only: powers the admin User details page."""
+    """Super-admin-only: powers the admin User details page."""
 
-    permission_classes = [IsAdmin]
+    permission_classes = [HasPermission("users.view_all")]
     serializer_class = UserSerializer
     queryset = User.objects.all().prefetch_related("roles")
     lookup_field = "id"
 
 
 class UserStatusUpdateView(APIView):
-    """US-09: admin activates/deactivates a user account."""
+    """US-09: super-admin activates/deactivates a user account."""
 
-    permission_classes = [IsAdmin]
+    permission_classes = [HasPermission("users.manage")]
 
     def patch(self, request, id):
         serializer = AdminUserStatusSerializer(data=request.data)
@@ -362,7 +372,7 @@ class UserDeleteView(APIView):
     from normal listings/login). Deleting a super_admin requires
     super_admin, matching the role-grant safeguard below."""
 
-    permission_classes = [IsAdmin]
+    permission_classes = [HasPermission("users.manage")]
 
     def delete(self, request, id):
         target = get_object_or_404(User, id=id)
@@ -389,7 +399,7 @@ class UserRoleUpdateView(APIView):
     itself requires super_admin — an admin cannot promote themselves or
     anyone else to super_admin."""
 
-    permission_classes = [IsAdmin]
+    permission_classes = [HasPermission("users.manage")]
 
     def patch(self, request, id):
         serializer = AdminUserRoleSerializer(data=request.data)

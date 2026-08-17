@@ -10,13 +10,13 @@ from apps.connections.models import DatabaseConnection
 from apps.organizations.models import Organization
 
 from .models import Role, User
-from .permissions import IsAdmin, IsSuperAdmin
+from .permissions import HasPermission
 
 
 class PlatformStatsView(APIView):
     """Super Admin dashboard: platform-wide counts (spec section 23)."""
 
-    permission_classes = [IsSuperAdmin]
+    permission_classes = [HasPermission("organizations.view_all")]
 
     def get(self, request):
         since_24h = timezone.now() - timedelta(hours=24)
@@ -57,7 +57,7 @@ class OrgStatsView(APIView):
     belongs to (owner/admin member) — never platform-wide (spec section
     24: "ADMIN should not automatically see other organizations")."""
 
-    permission_classes = [IsAdmin]
+    permission_classes = [HasPermission("admin.console.view")]
 
     def get(self, request):
         user = request.user

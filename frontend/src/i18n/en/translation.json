@@ -13,7 +13,30 @@
     "logout": "Log out",
     "email": "Email",
     "password": "Password",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "edit": "Edit"
+  },
+  "role": {
+    "customer": "Customer",
+    "admin": "Admin",
+    "super_admin": "Super Admin"
+  },
+  "profile": {
+    "overview": "Overview",
+    "verified": "Verified",
+    "notVerified": "Not verified",
+    "accountDetails": "Account details",
+    "accountDetailsBody": "Your name as it appears across AAP.",
+    "activity": "Activity",
+    "activityBody": "Your recent presence on this account.",
+    "lastActive": "Last active",
+    "never": "Never",
+    "accountCreated": "Account created",
+    "security": "Security",
+    "securityBody": "Password and two-factor authentication.",
+    "twoFactor": "Two-factor authentication",
+    "notEnabled": "Not enabled",
+    "goToSecurity": "Manage in Settings"
   },
   "nav": {
     "home": "Home",
@@ -26,13 +49,37 @@
     "audit": "Audit",
     "projects": "Projects",
     "organization": "Organization",
-    "members": "Members"
+    "members": "Members",
+    "groupWorkspace": "Workspace",
+    "groupAccount": "Account"
   },
   "settings": {
     "security": "Security",
     "securitySubtitle": "Change your account password.",
     "passwordsDontMatch": "New password and confirmation don't match.",
-    "passwordUpdated": "Password updated."
+    "passwordUpdated": "Password updated.",
+    "preferences": "Preferences",
+    "preferencesSubtitle": "Language, theme, and timezone.",
+    "language": "Language",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "timezone": "Timezone",
+    "timezoneHelp": "Detected automatically from your browser.",
+    "notifications": "Notifications",
+    "notificationsSubtitle": "Choose how you'd like to hear from AAP.",
+    "emailNotifications": "Email notifications",
+    "emailNotificationsHelp": "Receive an email when something needs your attention.",
+    "inAppNotifications": "In-app notifications",
+    "inAppNotificationsHelp": "Show the notification bell badge for new activity.",
+    "dangerZone": "Danger Zone",
+    "dangerZoneSubtitle": "Deactivating or deleting your account cannot be undone.",
+    "deactivateAccount": "Deactivate account",
+    "deactivateAccountHelp": "Temporarily disable your account. You can ask an administrator to reactivate it.",
+    "deleteAccount": "Delete account",
+    "deleteAccountHelp": "Permanently delete your account and remove your access.",
+    "contactAdminTitle": "Contact an administrator",
+    "contactAdminBody": "Account deactivation and deletion are handled by your organization owner or a platform administrator — reach out to them to make this change."
   },
   "project": {
     "overview": "Overview",

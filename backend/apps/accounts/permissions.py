@@ -1,6 +1,24 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from .models import Role
+from .rbac import user_has_permission
+
+
+def HasPermission(perm_key):
+    """DRF permission factory gating a view behind a single RBAC
+    permission key, e.g. `permission_classes = [HasPermission("audit.view")]`.
+    Checks the requester's resolved (cached) flat permission set — see
+    apps.accounts.rbac. Returns 403 with a clear message on failure."""
+
+    class _HasPermission(BasePermission):
+        message = f"You don't have the '{perm_key}' permission."
+
+        def has_permission(self, request, view):
+            user = request.user
+            return bool(user and user.is_authenticated and user_has_permission(user, perm_key))
+
+    _HasPermission.__name__ = f"HasPermission_{perm_key.replace('.', '_')}"
+    return _HasPermission
 
 
 class IsAdmin(BasePermission):

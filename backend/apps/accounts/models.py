@@ -19,6 +19,9 @@ class UserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        customer_role = Role.objects.filter(name=Role.CUSTOMER).first()
+        if customer_role:
+            user.roles.add(customer_role)
         return user
 
     def create_user(self, email, password=None, **extra_fields):
@@ -38,28 +41,70 @@ class UserManager(BaseUserManager):
 
 
 class Role(models.Model):
-    """Coarse RBAC role: 'super_admin', 'admin', or a custom one. Fine-
+    """Coarse RBAC role: 'customer', 'admin', or 'super_admin'. Fine-
     grained data permissions (table/column level) live in apps.permissions,
-    not here."""
+    not here. Platform-action permissions (this app's RBAC matrix) are
+    granted to a role via RolePermission and resolved through apps.accounts.rbac."""
 
+    CUSTOMER = "customer"
     SUPER_ADMIN = "super_admin"
     ADMIN = "admin"
 
     # super_admin implies every capability admin has (platform-level admin
     # accounts/orgs/security on top of day-to-day user administration).
     IMPLIES = {
-        SUPER_ADMIN: {SUPER_ADMIN, ADMIN},
-        ADMIN: {ADMIN},
+        SUPER_ADMIN: {SUPER_ADMIN, ADMIN, CUSTOMER},
+        ADMIN: {ADMIN, CUSTOMER},
+        CUSTOMER: {CUSTOMER},
     }
 
     name = models.SlugField(max_length=50, unique=True)
     description = models.CharField(max_length=255, blank=True)
+    permissions = models.ManyToManyField(
+        "Permission", through="RolePermission", related_name="roles", blank=True
+    )
 
     class Meta:
         ordering = ["name"]
 
     def __str__(self):
         return self.name
+
+
+class Permission(models.Model):
+    """A single grantable platform action, e.g. 'members.remove',
+    'org.edit', 'admin.console.view', 'audit.view'. The key is what
+    requirePermission()/HasPermission() and the frontend check against."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    key = models.SlugField(max_length=100, unique=True)
+    description = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        ordering = ["key"]
+
+    def __str__(self):
+        return self.key
+
+
+class RolePermission(models.Model):
+    """role_permissions join table: which permissions a role grants. Kept
+    as an explicit through model (rather than a bare M2M) so it has its
+    own id/timestamps and a predictable table name for the RBAC docs."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name="role_permissions")
+    permission = models.ForeignKey(Permission, on_delete=models.CASCADE, related_name="role_permissions")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "role_permissions"
+        constraints = [
+            models.UniqueConstraint(fields=["role", "permission"], name="unique_role_permission")
+        ]
+
+    def __str__(self):
+        return f"{self.role.name} -> {self.permission.key}"
 
 
 class User(AbstractBaseUser, PermissionsMixin):

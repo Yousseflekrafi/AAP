@@ -13,8 +13,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.accounts.mailer import send_invite_email
-from apps.accounts.models import Role, User
-from apps.accounts.permissions import IsSuperAdmin
+from apps.accounts.models import User
+from apps.accounts.permissions import HasPermission
+from apps.accounts.rbac import user_has_permission
 from apps.applications.models import Application
 from apps.audit.models import SecurityEvent
 from apps.audit.services import log_security_event
@@ -36,7 +37,8 @@ from .serializers import (
 class OrganizationListCreateView(ListCreateAPIView):
     """Any verified user may create an organization and becomes its owner.
     Listing is scoped to organizations the requester belongs to, unless
-    they're a platform admin/super_admin (who see all)."""
+    they hold organizations.view_all (super_admin — see the RBAC matrix;
+    a plain admin sees only the organizations they belong to)."""
 
     permission_classes = [IsAuthenticated]
     serializer_class = OrganizationSerializer
@@ -44,7 +46,7 @@ class OrganizationListCreateView(ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         qs = Organization.objects.filter(is_deleted=False)
-        if not user.has_role(Role.ADMIN):
+        if not user_has_permission(user, "organizations.view_all"):
             qs = qs.filter(members__user=user)
         return qs.distinct()
 
@@ -246,7 +248,7 @@ class OrganizationSuspendView(APIView):
     super_admin locks one out after the fact (abuse, security incident,
     billing, etc.)."""
 
-    permission_classes = [IsSuperAdmin]
+    permission_classes = [HasPermission("organizations.suspend")]
 
     def post(self, request, id):
         organization = get_object_or_404(Organization, id=id, is_deleted=False)
@@ -275,7 +277,7 @@ class OrganizationSuspendView(APIView):
 
 
 class OrganizationReactivateView(APIView):
-    permission_classes = [IsSuperAdmin]
+    permission_classes = [HasPermission("organizations.suspend")]
 
     def post(self, request, id):
         organization = get_object_or_404(Organization, id=id, is_deleted=False)

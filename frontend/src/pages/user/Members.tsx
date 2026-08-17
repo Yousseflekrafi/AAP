@@ -12,10 +12,12 @@ import { Icon } from "../../reusedComponents/Icon";
 import { Modal, ConfirmDialog } from "../../reusedComponents/Modal";
 import { StatusBadge, OnlineDot } from "../../reusedComponents/StatusBadge";
 import { useAuth } from "../../hooks/useAuth";
+import { usePermission } from "../../hooks/usePermission";
 
 export default function Members() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const canManageMembersPlatform = usePermission("members.manage");
   const queryClient = useQueryClient();
   const { organization, loading: orgLoading, error: orgError } = useCurrentOrganization();
 
@@ -57,7 +59,9 @@ export default function Members() {
   });
 
   const currentMember = members.find((m) => m.user === user?.id);
-  const canManage = currentMember?.role === "owner" || currentMember?.role === "admin";
+  // Org owners/admins manage their own team; platform admin/super_admin
+  // (members.manage) can additionally manage any organization's members.
+  const canManage = currentMember?.role === "owner" || currentMember?.role === "admin" || canManageMembersPlatform;
 
   const inviteErrorDetail =
     inviteMutation.isError && isAxiosError(inviteMutation.error) && inviteMutation.error.response?.data?.detail

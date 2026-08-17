@@ -13,7 +13,30 @@
     "logout": "Déconnexion",
     "email": "E-mail",
     "password": "Mot de passe",
-    "confirm": "Confirmer"
+    "confirm": "Confirmer",
+    "edit": "Modifier"
+  },
+  "role": {
+    "customer": "Client",
+    "admin": "Admin",
+    "super_admin": "Super admin"
+  },
+  "profile": {
+    "overview": "Aperçu",
+    "verified": "Vérifié",
+    "notVerified": "Non vérifié",
+    "accountDetails": "Détails du compte",
+    "accountDetailsBody": "Votre nom tel qu'il apparaît dans AAP.",
+    "activity": "Activité",
+    "activityBody": "Votre présence récente sur ce compte.",
+    "lastActive": "Dernière activité",
+    "never": "Jamais",
+    "accountCreated": "Compte créé le",
+    "security": "Sécurité",
+    "securityBody": "Mot de passe et authentification à deux facteurs.",
+    "twoFactor": "Authentification à deux facteurs",
+    "notEnabled": "Non activée",
+    "goToSecurity": "Gérer dans les paramètres"
   },
   "nav": {
     "home": "Accueil",
@@ -26,13 +49,37 @@
     "audit": "Audit",
     "projects": "Projets",
     "organization": "Organisation",
-    "members": "Membres"
+    "members": "Membres",
+    "groupWorkspace": "Espace de travail",
+    "groupAccount": "Compte"
   },
   "settings": {
     "security": "Sécurité",
     "securitySubtitle": "Modifiez le mot de passe de votre compte.",
     "passwordsDontMatch": "Le nouveau mot de passe et la confirmation ne correspondent pas.",
-    "passwordUpdated": "Mot de passe mis à jour."
+    "passwordUpdated": "Mot de passe mis à jour.",
+    "preferences": "Préférences",
+    "preferencesSubtitle": "Langue, thème et fuseau horaire.",
+    "language": "Langue",
+    "theme": "Thème",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
+    "timezone": "Fuseau horaire",
+    "timezoneHelp": "Détecté automatiquement à partir de votre navigateur.",
+    "notifications": "Notifications",
+    "notificationsSubtitle": "Choisissez comment vous souhaitez être informé par AAP.",
+    "emailNotifications": "Notifications par e-mail",
+    "emailNotificationsHelp": "Recevez un e-mail lorsque quelque chose nécessite votre attention.",
+    "inAppNotifications": "Notifications dans l'application",
+    "inAppNotificationsHelp": "Afficher le badge de la cloche de notification pour les nouvelles activités.",
+    "dangerZone": "Zone de danger",
+    "dangerZoneSubtitle": "La désactivation ou la suppression de votre compte est irréversible.",
+    "deactivateAccount": "Désactiver le compte",
+    "deactivateAccountHelp": "Désactivez temporairement votre compte. Vous pouvez demander à un administrateur de le réactiver.",
+    "deleteAccount": "Supprimer le compte",
+    "deleteAccountHelp": "Supprimez définitivement votre compte et votre accès.",
+    "contactAdminTitle": "Contactez un administrateur",
+    "contactAdminBody": "La désactivation et la suppression de compte sont gérées par le propriétaire de votre organisation ou un administrateur de la plateforme — contactez-les pour effectuer ce changement."
   },
   "project": {
     "overview": "Aperçu",

@@ -58,6 +58,11 @@ export async function fetchMe(): Promise<User> {
   return data;
 }
 
+export async function updateProfile(payload: { first_name: string; last_name: string }): Promise<User> {
+  const { data } = await apiClient.patch<User>("/auth/me/", payload);
+  return data;
+}
+
 // Several components mount useAuth() in the same render (Navbar, route
 // guards, pages) and each sees status "idle" before the first one's
 // dispatch takes effect. Without this, they'd fire concurrent session
