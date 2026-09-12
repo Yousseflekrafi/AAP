@@ -2,7 +2,8 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 
-from .models import User
+from .models import Role, User
+from .rbac import user_permissions
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -65,6 +66,8 @@ class GoogleLoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     roles = serializers.SlugRelatedField(slug_field="name", many=True, read_only=True)
+    role = serializers.SerializerMethodField()
+    permissions = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -72,9 +75,32 @@ class UserSerializer(serializers.ModelSerializer):
             "id", "email", "first_name", "last_name", "full_name", "account_type",
             "is_active", "is_deleted", "status", "is_online", "last_seen_at",
             "is_email_verified", "is_staff", "is_superuser", "auth_provider",
-            "roles", "created_at",
+            "roles", "role", "permissions", "created_at",
         ]
         read_only_fields = fields
+
+    def get_role(self, obj):
+        """The single highest-precedence role name, defaulting to
+        'customer' — for UI display; authorization itself is always
+        checked against the full `permissions` list, not this field."""
+        if obj.has_role(Role.SUPER_ADMIN):
+            return Role.SUPER_ADMIN
+        if obj.has_role(Role.ADMIN):
+            return Role.ADMIN
+        return Role.CUSTOMER
+
+    def get_permissions(self, obj):
+        return sorted(user_permissions(obj))
+
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    """What a user may edit about their own account details — not the full
+    UserSerializer surface (role, is_staff, is_superuser, etc. stay
+    read-only everywhere)."""
+
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name"]
 
 
 class AdminUserStatusSerializer(serializers.Serializer):

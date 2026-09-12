@@ -33,11 +33,7 @@ export default function Users() {
         </div>
       ),
     },
-    {
-      key: "roles",
-      header: "Roles",
-      render: (row) => row.roles.join(", ") || "—",
-    },
+    { key: "roles", header: "Roles", render: (row) => row.roles .map((role) => { if (role === "super_admin") return "Super Admin"; if (role === "customer") return "Customer"; if (role === "admin") return "Admin"; return role; }) .join(", ") || "—", },
     {
       key: "is_email_verified",
       header: "Verified",

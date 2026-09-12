@@ -32,8 +32,21 @@ class Application(models.Model):
         default=dict,
         blank=True,
         help_text="Admin Builder config: per selected table, which columns are filters, "
-        "which are form fields, and any chart definitions. Keyed by table id.",
+        "which are form fields, allowed CRUD methods, and any chart definitions. "
+        "Keyed by table id.",
     )
+    panel_style = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Visual style of the generated admin panel: primary/background colors, "
+        "logo URL, button style, input style, default chart type.",
+    )
+    is_published = models.BooleanField(
+        default=False,
+        help_text="Set once the customer has confirmed their style/table/method choices "
+        "on the review screen and published the panel.",
+    )
+    published_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,

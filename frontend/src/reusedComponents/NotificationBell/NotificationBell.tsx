@@ -47,20 +47,18 @@ export function NotificationBell() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label="Notifications"
-        className="relative flex h-9 w-9 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+        className="relative flex h-9 w-9 items-center justify-center rounded-md text-gray-500 transition-colors duration-150 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
       >
         <Icon name="bell" size={18} />
         {unreadCount > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-medium text-white">
-            {unreadCount > 9 ? "9+" : unreadCount}
-          </span>
+          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-900" />
         )}
       </button>
 
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-50 mt-2 w-80 rounded-xl bg-white dark:bg-gray-900 shadow-xl shadow-gray-900/10">
+          <div className="absolute right-0 z-50 mt-2 w-80 rounded-xl border border-gray-200 bg-white shadow-md shadow-gray-900/10 dark:border-gray-800 dark:bg-gray-900">
             <div className="flex items-center justify-between px-3 py-2">
               <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Notifications</span>
               <button
@@ -83,7 +81,7 @@ export function NotificationBell() {
                   key={n.id}
                   type="button"
                   onClick={() => void handleClickNotification(n)}
-                  className={`block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                  className={`block w-full px-3 py-2 text-left text-sm transition-colors duration-150 hover:bg-gray-50 dark:hover:bg-gray-800 ${
                     n.is_read ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-gray-100"
                   }`}
                 >

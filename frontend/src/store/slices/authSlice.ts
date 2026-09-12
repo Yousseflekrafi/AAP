@@ -39,3 +39,6 @@ export const selectIsAdmin = (state: { auth: AuthState }) =>
   (state.auth.user.is_superuser || state.auth.user.roles.includes("admin") || state.auth.user.roles.includes("super_admin"));
 export const selectIsSuperAdmin = (state: { auth: AuthState }) =>
   !!state.auth.user && (state.auth.user.is_superuser || state.auth.user.roles.includes("super_admin"));
+export const selectPermissions = (state: { auth: AuthState }) => state.auth.user?.permissions ?? [];
+export const selectHasPermission = (permKey: string) => (state: { auth: AuthState }) =>
+  !!state.auth.user?.permissions.includes(permKey);

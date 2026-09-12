@@ -12,9 +12,14 @@ export interface SidebarLink {
   icon: IconName;
 }
 
+export interface SidebarGroup {
+  labelKey?: string;
+  links: SidebarLink[];
+}
+
 export type SidebarVariant = "customer" | "admin";
 
-export function Sidebar({ links, variant = "customer" }: { links: SidebarLink[]; variant?: SidebarVariant }) {
+export function Sidebar({ groups, variant = "customer" }: { groups: SidebarGroup[]; variant?: SidebarVariant }) {
   const { t } = useTranslation();
   const mobileOpen = useAppSelector(selectSidebarCollapsed);
   const dispatch = useAppDispatch();
@@ -28,7 +33,7 @@ export function Sidebar({ links, variant = "customer" }: { links: SidebarLink[];
         <div className="fixed inset-0 z-40 bg-black/40 md:hidden" onClick={closeMobile} aria-hidden="true" />
       )}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-60 shrink-0 flex-col transition-transform md:static md:z-auto md:w-16 md:translate-x-0 xl:w-60 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-60 shrink-0 flex-col transition-transform duration-200 md:static md:z-auto md:w-16 md:translate-x-0 xl:w-60 ${
           isAdmin ? "bg-admin-bg border-r border-admin-border" : "bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800"
         } ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
@@ -49,31 +54,50 @@ export function Sidebar({ links, variant = "customer" }: { links: SidebarLink[];
             AAP
           </span>
         </div>
-        <nav className="flex flex-1 flex-col gap-1 px-2 py-3">
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end
-              onClick={closeMobile}
-              className={({ isActive }) => {
-                if (isAdmin) {
-                  return `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-brand-600/15 text-brand-400"
-                      : "text-slate-300 hover:bg-white/5 hover:text-white"
-                  }`;
-                }
-                return `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300"
-                    : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                }`;
-              }}
-            >
-              <Icon name={link.icon} size={18} />
-              <span className="md:hidden xl:inline">{t(link.labelKey)}</span>
-            </NavLink>
+        <nav className="flex flex-1 flex-col gap-4 overflow-y-auto px-2 py-4">
+          {groups.map((group, idx) => (
+            <div key={group.labelKey ?? idx} className="flex flex-col gap-1">
+              {group.labelKey && (
+                <p
+                  className={`px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider md:hidden xl:block ${
+                    isAdmin ? "text-slate-500" : "text-gray-400 dark:text-gray-500"
+                  }`}
+                >
+                  {t(group.labelKey)}
+                </p>
+              )}
+              {group.links.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end
+                  onClick={closeMobile}
+                  className={({ isActive }) => {
+                    const base = "relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150";
+                    if (isAdmin) {
+                      return `${base} ${
+                        isActive ? "bg-brand-600/10 text-brand-400" : "text-slate-300 hover:bg-white/5 hover:text-white"
+                      }`;
+                    }
+                    return `${base} ${
+                      isActive
+                        ? "bg-brand-600/10 text-brand-700 dark:bg-brand-600/15 dark:text-brand-300"
+                        : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                    }`;
+                  }}
+                >
+                  {({ isActive }) => (
+                    <>
+                      {isActive && (
+                        <span className="absolute -left-2 top-1.5 bottom-1.5 w-1 rounded-full bg-brand-600" />
+                      )}
+                      <Icon name={link.icon} size={18} />
+                      <span className="md:hidden xl:inline">{t(link.labelKey)}</span>
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
         {user && (

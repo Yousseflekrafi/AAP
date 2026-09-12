@@ -16,12 +16,18 @@ export function PublicLayout() {
           <Logo height={26} />
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium text-gray-600 dark:text-gray-300 sm:flex">
-          <a href="/#how-it-works" className="hover:text-brand-600">
+          <a href="/#how-it-works" className="transition-colors duration-150 hover:text-brand-600">
             {t("home.navHowItWorks")}
           </a>
-          <a href="/#security" className="hover:text-brand-600">
+          <a href="/#security" className="transition-colors duration-150 hover:text-brand-600">
             {t("home.navSecurity")}
           </a>
+          <Link
+            to="/pricing"
+            className={`transition-colors duration-150 hover:text-brand-600 ${pathname === "/pricing" ? "text-brand-600" : ""}`}
+          >
+            {t("home.navPricing")}
+          </Link>
         </nav>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />

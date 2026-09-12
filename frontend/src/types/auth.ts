@@ -18,6 +18,8 @@ export interface User {
   is_superuser: boolean;
   auth_provider: "password" | "google";
   roles: string[];
+  role: "customer" | "admin" | "super_admin";
+  permissions: string[];
   created_at: string;
 }
 

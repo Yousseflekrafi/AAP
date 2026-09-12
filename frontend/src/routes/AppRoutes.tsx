@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { AdminRoute } from "./AdminRoute";
 
 import Home from "../pages/public/Home";
+import Pricing from "../pages/public/Pricing";
 import Login from "../pages/public/Login";
 import Register from "../pages/public/Register";
 import VerifyEmail from "../pages/public/VerifyEmail";
@@ -34,6 +35,7 @@ export function AppRoutes() {
     <Routes>
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/pricing" element={<Pricing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
