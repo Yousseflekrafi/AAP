@@ -1,6 +1,6 @@
 import { apiClient } from "./apiClient";
 import type { Paginated } from "./adminService";
-import type { AdminConfig, Project } from "../types/project";
+import type { AdminConfig, PanelStyle, Project, PublishResult } from "../types/project";
 
 export interface CreateProjectPayload {
   name: string;
@@ -36,5 +36,15 @@ export async function deleteProject(id: string): Promise<void> {
 
 export async function updateAdminConfig(id: string, adminConfig: AdminConfig): Promise<Project> {
   const { data } = await apiClient.patch<Project>(`/projects/${id}/`, { admin_config: adminConfig });
+  return data;
+}
+
+export async function updatePanelStyle(id: string, panelStyle: Partial<PanelStyle>): Promise<Project> {
+  const { data } = await apiClient.patch<Project>(`/projects/${id}/`, { panel_style: panelStyle });
+  return data;
+}
+
+export async function publishProject(id: string): Promise<PublishResult> {
+  const { data } = await apiClient.post<PublishResult>(`/projects/${id}/publish/`);
   return data;
 }

@@ -6,14 +6,15 @@ import { isAxiosError } from "axios";
 import * as projectsService from "../../services/projectsService";
 import * as connectionsService from "../../services/connectionsService";
 import type { Project, ProjectEnvironment } from "../../types/project";
-import type { ChartConfig, TableAdminConfig } from "../../types/project";
+import type { ChartConfig, HttpMethod, PanelStyle, TableAdminConfig } from "../../types/project";
+import { HTTP_METHODS, DEFAULT_PANEL_STYLE } from "../../types/project";
 import type { DatabaseColumn, DatabaseTable } from "../../types/connection";
 import { Loader } from "../../reusedComponents/Loader";
 import { ErrorState } from "../../reusedComponents/ErrorState";
 import { Icon } from "../../reusedComponents/Icon";
 import { ConfirmDialog } from "../../reusedComponents/Modal";
 
-type Tab = "overview" | "database" | "dataAccess" | "adminBuilder" | "settings";
+type Tab = "overview" | "database" | "dataAccess" | "style" | "adminBuilder" | "publish" | "settings";
 
 export default function ProjectDetail() {
   const { t } = useTranslation();
@@ -43,7 +44,9 @@ export default function ProjectDetail() {
     { key: "overview", label: t("project.overview") },
     { key: "database", label: t("project.database") },
     { key: "dataAccess", label: t("project.dataAccess") },
+    { key: "style", label: t("project.style") },
     { key: "adminBuilder", label: t("project.adminBuilder") },
+    { key: "publish", label: t("project.publish") },
     { key: "settings", label: t("project.settings") },
   ];
 
@@ -60,6 +63,11 @@ export default function ProjectDetail() {
         <h1 className="flex items-center gap-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
           <Icon name="folder" className="text-brand-600" />
           {project.name}
+          {project.is_published && (
+            <span className="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-950/30 dark:text-green-400">
+              {t("project.publishedBadge")}
+            </span>
+          )}
         </h1>
       </div>
 
@@ -83,7 +91,9 @@ export default function ProjectDetail() {
       {tab === "overview" && <OverviewTab project={project} />}
       {tab === "database" && <DatabaseTab project={project} />}
       {tab === "dataAccess" && <DataAccessTab project={project} />}
+      {tab === "style" && <StyleTab project={project} />}
       {tab === "adminBuilder" && <AdminBuilderTab project={project} />}
+      {tab === "publish" && <PublishTab project={project} />}
       {tab === "settings" && <SettingsTab project={project} onDeleted={() => navigate("/projects")} />}
     </div>
   );
@@ -429,7 +439,7 @@ function DataAccessTab({ project }: { project: Project }) {
   );
 }
 
-const EMPTY_TABLE_CONFIG: TableAdminConfig = { filters: [], form_fields: [], charts: [] };
+const EMPTY_TABLE_CONFIG: TableAdminConfig = { filters: [], form_fields: [], charts: [], allowed_methods: ["GET"] };
 
 function AdminBuilderTab({ project }: { project: Project }) {
   const { t } = useTranslation();
@@ -506,7 +516,34 @@ function AdminBuilderTab({ project }: { project: Project }) {
                 <Icon name="folder" size={16} className="text-brand-600" />
                 {tbl.name}
               </p>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                <div>
+                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-400">{t("project.methods")}</p>
+                  <div className="flex flex-col gap-1">
+                    {HTTP_METHODS.map((method) => (
+                      <label
+                        key={method}
+                        className={`flex items-center gap-2 text-sm ${
+                          method === "GET" ? "text-gray-400" : "text-gray-700 dark:text-gray-300"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={tableConfig.allowed_methods.includes(method)}
+                          disabled={method === "GET"}
+                          onChange={() =>
+                            updateTableConfig(tbl.id, {
+                              allowed_methods: toggleInList(tableConfig.allowed_methods, method) as HttpMethod[],
+                            })
+                          }
+                          className="h-3.5 w-3.5 accent-brand-600 disabled:opacity-60"
+                        />
+                        {method}
+                      </label>
+                    ))}
+                  </div>
+                  <p className="mt-1.5 text-xs text-gray-400">{t("project.methodsHelp")}</p>
+                </div>
                 <div>
                   <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-400">{t("project.filters")}</p>
                   <div className="flex flex-col gap-1">
@@ -585,6 +622,236 @@ function AdminBuilderTab({ project }: { project: Project }) {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function StyleTab({ project }: { project: Project }) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const [style, setStyle] = useState<PanelStyle>({ ...DEFAULT_PANEL_STYLE, ...project.panel_style });
+
+  const saveMutation = useMutation({
+    mutationFn: () => projectsService.updatePanelStyle(project.id, style),
+    onSuccess: (updated) => queryClient.setQueryData(["project", project.id], updated),
+  });
+
+  const set = <K extends keyof PanelStyle>(key: K, value: PanelStyle[K]) =>
+    setStyle((prev) => ({ ...prev, [key]: value }));
+
+  const buttonRadius = style.button_style === "pill" ? "rounded-full" : style.button_style === "square" ? "rounded-none" : "rounded-md";
+  const inputClass =
+    style.input_style === "filled"
+      ? "border border-transparent bg-gray-100 dark:bg-gray-800"
+      : "border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900";
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-500 dark:text-gray-400">{t("project.styleHelp")}</p>
+        <button
+          type="button"
+          onClick={() => saveMutation.mutate()}
+          disabled={saveMutation.isPending}
+          className="flex items-center gap-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
+        >
+          {saveMutation.isPending && <Loader size="sm" className="text-white" />}
+          {t("common.save")}
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="flex flex-col gap-4 rounded-xl bg-white dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
+          <div className="flex items-center gap-3">
+            <label className="w-40 text-sm text-gray-700 dark:text-gray-300">{t("project.stylePrimaryColor")}</label>
+            <input
+              type="color"
+              value={style.primary_color}
+              onChange={(e) => set("primary_color", e.target.value)}
+              className="h-9 w-14 cursor-pointer rounded border border-gray-300 dark:border-gray-700"
+            />
+            <span className="text-xs text-gray-400">{style.primary_color}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <label className="w-40 text-sm text-gray-700 dark:text-gray-300">{t("project.styleBackgroundColor")}</label>
+            <input
+              type="color"
+              value={style.background_color}
+              onChange={(e) => set("background_color", e.target.value)}
+              className="h-9 w-14 cursor-pointer rounded border border-gray-300 dark:border-gray-700"
+            />
+            <span className="text-xs text-gray-400">{style.background_color}</span>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm text-gray-700 dark:text-gray-300">{t("project.styleLogoUrl")}</label>
+            <input
+              value={style.logo_url}
+              onChange={(e) => set("logo_url", e.target.value)}
+              placeholder={t("project.styleLogoUrlPlaceholder")}
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm text-gray-700 dark:text-gray-300">{t("project.styleButtonStyle")}</label>
+            <select
+              value={style.button_style}
+              onChange={(e) => set("button_style", e.target.value as PanelStyle["button_style"])}
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+            >
+              <option value="rounded">{t("project.styleButtonRounded")}</option>
+              <option value="square">{t("project.styleButtonSquare")}</option>
+              <option value="pill">{t("project.styleButtonPill")}</option>
+            </select>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm text-gray-700 dark:text-gray-300">{t("project.styleInputStyle")}</label>
+            <select
+              value={style.input_style}
+              onChange={(e) => set("input_style", e.target.value as PanelStyle["input_style"])}
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+            >
+              <option value="outlined">{t("project.styleInputOutlined")}</option>
+              <option value="filled">{t("project.styleInputFilled")}</option>
+            </select>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm text-gray-700 dark:text-gray-300">{t("project.styleDefaultChart")}</label>
+            <select
+              value={style.default_chart_type}
+              onChange={(e) => set("default_chart_type", e.target.value as PanelStyle["default_chart_type"])}
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+            >
+              <option value="bar">Bar</option>
+              <option value="line">Line</option>
+              <option value="pie">Pie</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">{t("project.stylePreview")}</p>
+          <div
+            className="flex flex-col gap-4 rounded-xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none"
+            style={{ backgroundColor: style.background_color }}
+          >
+            <div className="flex items-center gap-2">
+              {style.logo_url ? (
+                <img src={style.logo_url} alt="" className="h-7 w-7 rounded object-contain" />
+              ) : (
+                <span className="flex h-7 w-7 items-center justify-center rounded" style={{ backgroundColor: style.primary_color }} />
+              )}
+              <p className="font-semibold text-gray-900">{t("project.stylePreviewTitle")}</p>
+            </div>
+            <input
+              disabled
+              placeholder="Search…"
+              className={`px-3.5 py-2.5 text-sm text-gray-500 ${inputClass} ${
+                style.input_style === "filled" ? "rounded-md" : "rounded-lg"
+              }`}
+            />
+            <button
+              type="button"
+              disabled
+              className={`w-fit px-4 py-2 text-sm font-medium text-white ${buttonRadius}`}
+              style={{ backgroundColor: style.primary_color }}
+            >
+              {t("project.stylePreviewButton")}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PublishTab({ project }: { project: Project }) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const tableIds = Object.keys(project.admin_config);
+  const { data: schema } = useProjectSchema(project.id);
+  const tableNameById = new Map((schema?.tables ?? []).map((tbl: DatabaseTable) => [tbl.id, tbl.name]));
+
+  const publishMutation = useMutation({
+    mutationFn: () => projectsService.publishProject(project.id),
+    onSuccess: (result) => queryClient.setQueryData(["project", project.id], result.application),
+  });
+
+  const style = { ...DEFAULT_PANEL_STYLE, ...project.panel_style };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-sm text-gray-500 dark:text-gray-400">{t("project.publishHelp")}</p>
+
+      <div className="rounded-xl bg-white dark:bg-gray-900 p-5 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">{t("project.publishSummaryStyle")}</p>
+        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-700 dark:text-gray-300">
+          <span className="flex items-center gap-1.5">
+            <span className="h-3.5 w-3.5 rounded-full border border-gray-300" style={{ backgroundColor: style.primary_color }} />
+            {style.primary_color}
+          </span>
+          <span>{t("project.styleButtonStyle")}: {style.button_style}</span>
+          <span>{t("project.styleInputStyle")}: {style.input_style}</span>
+          <span>{t("project.styleDefaultChart")}: {style.default_chart_type}</span>
+        </div>
+      </div>
+
+      <div className="rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm shadow-gray-900/5 dark:shadow-none">
+        <p className="px-5 pt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">{t("project.publishSummaryTables")}</p>
+        {tableIds.length === 0 ? (
+          <p className="px-5 py-4 text-sm text-gray-500 dark:text-gray-400">{t("project.publishNoTables")}</p>
+        ) : (
+          <div className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800/60">
+            {tableIds.map((tableId) => {
+              const tableConfig = project.admin_config[tableId];
+              return (
+                <div key={tableId} className="flex flex-wrap items-center gap-3 px-5 py-3 text-sm">
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                    {tableNameById.get(tableId) ?? tableId}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    {tableConfig.allowed_methods.join(", ")}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    {tableConfig.filters.length} {t("project.filters").toLowerCase()}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    {tableConfig.form_fields.length} {t("project.formFields").toLowerCase()}
+                  </span>
+                  {tableConfig.charts.length > 0 && (
+                    <span className="text-xs text-gray-400">{tableConfig.charts[0].type}</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => publishMutation.mutate()}
+          disabled={tableIds.length === 0 || publishMutation.isPending}
+          className="flex items-center gap-2 rounded-md bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
+        >
+          {publishMutation.isPending && <Loader size="sm" className="text-white" />}
+          {project.is_published ? t("project.publishAgain") : t("project.publishConfirm")}
+        </button>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          {project.is_published && project.published_at
+            ? t("project.publishedAt", { date: new Date(project.published_at).toLocaleString() })
+            : t("project.publishNotYet")}
+        </span>
+      </div>
+
+      {publishMutation.isError && <p className="text-sm text-red-600">{t("common.somethingWentWrong")}</p>}
+
+      {publishMutation.isSuccess && (
+        <div className="rounded-xl bg-brand-50 dark:bg-brand-950/30 p-5 border border-brand-100 dark:border-brand-900/40">
+          <p className="mb-1 font-medium text-brand-900 dark:text-brand-200">{t("project.publishStubTitle")}</p>
+          <p className="text-sm text-brand-800 dark:text-brand-300">{t("project.publishStubBody")}</p>
+        </div>
+      )}
     </div>
   );
 }

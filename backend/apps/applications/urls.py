@@ -11,4 +11,5 @@ urlpatterns = [
         name="project-list",
     ),
     path("projects/<uuid:id>/", views.ApplicationDetailView.as_view(), name="project-detail"),
+    path("projects/<uuid:id>/publish/", views.ApplicationPublishView.as_view(), name="project-publish"),
 ]
